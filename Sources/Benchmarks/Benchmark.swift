@@ -15,7 +15,7 @@ struct Benchmark: ParsableCommand {
     mutating func run() throws {
         let benchmark = BenchmarkExecuter()
 
-        benchmark.benchmark(name: "RandomGenegator") { context in
+        benchmark.benchmark(name: "CryptoRandomGenegator") { context in
             var generator = CryptoRandomGenegator(seed: 0)
             for _ in 0 ..< 10_000_000 {
                 _ = generator.next()
