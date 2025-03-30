@@ -7,25 +7,34 @@
 
 import Foundation
 
-public struct FastRandomGenegator: RandomNumberGenerator {
-    private var x: UInt64 = 0
+public struct Random48Genegator: RandomNumberGenerator {
+    private var state: vstate
+
+    private init(state: vstate) {
+        self.state = state
+    }
 
     public init(seed: UInt64) {
-        x = Self.next(for: seed)
+        var state: vstate = .init(x0: 0, x1: 0, x2: 0)
+        rand48_set(state: &state, s: seed)
+        self.init(state: state)
     }
 
     public
     mutating func next() -> UInt64 {
-        let prev = Self.next(for: x)
-        x = Self.next(for: x)
-        let next = Self.next(for: x)
-        x = next
-        return prev ^ (next << (64 - 48))
+        var state = self.state
+
+        let prev = rand48_get(state: &state)
+        let next = rand48_get(state: &state)
+
+        self.state = state
+
+        return prev ^ (next << 32)
     }
 }
 
 public
-extension FastRandomGenegator {
+extension Random48Genegator {
     init(uuid: UUID = UUID()) {
         let seed = Self.seed(from: uuid)
         self.init(seed: seed)
@@ -33,19 +42,7 @@ extension FastRandomGenegator {
 }
 
 private
-extension FastRandomGenegator {
-    static var a: UInt64 { 0x5_DEEC_E66D }
-    static var c: UInt64 { 0xB }
-
-    static var m: UInt64 { 0x2 << 48 }
-
-    static func next(for x: UInt64) -> UInt64 {
-        x.multipliedReportingOverflow(by: a)
-            .partialValue
-            .addingReportingOverflow(c)
-            .partialValue % m
-    }
-
+extension Random48Genegator {
     static func seed(from: UUID) -> UInt64 {
         let uuid = from.uuid
         let bytes: [UInt8] = [

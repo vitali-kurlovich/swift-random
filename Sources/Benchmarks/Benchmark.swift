@@ -24,8 +24,8 @@ struct Benchmark: ParsableCommand {
             context.blackHole(UInt64.random(in: UInt64.min ... UInt64.max, using: &generator))
         }
 
-        benchmark.benchmark(name: "FastRandomGenegator") { context in
-            var generator = FastRandomGenegator()
+        benchmark.benchmark(name: "Random48Genegator") { context in
+            var generator = Random48Genegator()
             for _ in 0 ..< 10_000_000 {
                 _ = UInt64.random(in: UInt64.min ... UInt64.max, using: &generator)
             }
