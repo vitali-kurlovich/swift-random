@@ -10,13 +10,13 @@ import Foundation
 
 public
 struct CryptoRandomGenegator: RandomNumberGenerator {
-    internal typealias Hash = SHA512
-    internal typealias Digest = Hash.Digest
+    typealias Hash = SHA512
+    typealias Digest = Hash.Digest
 
     private var digest: Digest
     private var offset: Int = 0
 
-    internal init(bufferPointer: UnsafeRawBufferPointer) {
+    init(bufferPointer: UnsafeRawBufferPointer) {
         var hash = Hash()
         hash.update(bufferPointer: bufferPointer)
         digest = hash.finalize()
