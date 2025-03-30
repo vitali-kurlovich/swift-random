@@ -5,8 +5,8 @@
 //  Created by Vitali Kurlovich on 30.03.25.
 //
 
-import Crypto
-import Foundation
+import struct Crypto.SHA512
+import struct Foundation.UUID
 
 public
 struct CryptoRandomGenegator: RandomNumberGenerator {

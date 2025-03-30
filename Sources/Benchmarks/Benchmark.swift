@@ -7,7 +7,7 @@
 
 import ArgumentParser
 import Benchmarks
-import Foundation
+import struct Foundation.UUID
 import Random
 
 @main
