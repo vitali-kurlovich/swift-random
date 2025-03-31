@@ -5,21 +5,19 @@
 //  Created by Vitali Kurlovich on 31.03.25.
 //
 
-private let a0: UInt64 = 0xE66D
-private let a1: UInt64 = 0xDEEC
-private let a2: UInt64 = 0x0005
-
-private let c0: UInt64 = 0x000B
-
+@usableFromInline
 struct rand48_state_t {
+    @usableFromInline
     var x0: UInt16
+    @usableFromInline
     var x1: UInt16
+    @usableFromInline
     var x2: UInt16
 }
 
-typealias vstate = rand48_state_t
-
-func rand48_set(state: inout vstate, s: UInt64) {
+@inlinable
+@inline(__always)
+func rand48_set(state: inout rand48_state_t, s: UInt64) {
     if s == 0 {
         state.x0 = 0x330E
         state.x1 = 0xABCD
@@ -31,24 +29,29 @@ func rand48_set(state: inout vstate, s: UInt64) {
     }
 }
 
-func rand48_advance(state: inout vstate) {
+@inlinable
+@inline(__always)
+func rand48_advance(state: inout rand48_state_t) {
     let x0 = UInt64(state.x0)
     let x1 = UInt64(state.x1)
     let x2 = UInt64(state.x2)
 
-    var a = a0 * x0 + c0
+    var a: UInt64 = 0x000B
+    a += 0xE66D * x0
     state.x0 = UInt16(truncatingIfNeeded: a & 0xFFFF)
 
     a >>= 16
-    a += a0 * x1 + a1 * x0
+    a += 0xE66D * x1 + 0xDEEC * x0
     state.x1 = UInt16(truncatingIfNeeded: a & 0xFFFF)
 
     a >>= 16
-    a += a0 * x2 + a1 * x1 + a2 * x0
+    a += 0xE66D * x2 + 0xDEEC * x1 + 0x0005 * x0
     state.x2 = UInt16(truncatingIfNeeded: a & 0xFFFF)
 }
 
-func rand48_get(state: inout vstate) -> UInt64 {
+@inlinable
+@inline(__always)
+func rand48_get(state: inout rand48_state_t) -> UInt64 {
     rand48_advance(state: &state)
 
     let x1 = UInt64(state.x1)
@@ -56,21 +59,3 @@ func rand48_get(state: inout vstate) -> UInt64 {
 
     return (x2 << 16) + x1
 }
-
-/*
-
- static unsigned long int
- rand48_get (void *vstate)
- {
-   unsigned long int x1, x2;
-
-   rand48_state_t *state = (rand48_state_t *) vstate;
-   rand48_advance (state) ;
-
-   x2 = (unsigned long int) state->x2;
-   x1 = (unsigned long int) state->x1;
-
-   return (x2 << 16) + x1;
- }
-
- */

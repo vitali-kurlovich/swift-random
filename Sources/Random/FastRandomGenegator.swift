@@ -8,14 +8,14 @@
 import Foundation
 
 public struct Random48Genegator: RandomNumberGenerator {
-    private var state: vstate
+    private var state: rand48_state_t
 
-    private init(state: vstate) {
+    private init(state: rand48_state_t) {
         self.state = state
     }
 
     public init(seed: UInt64) {
-        var state: vstate = .init(x0: 0, x1: 0, x2: 0)
+        var state: rand48_state_t = .init(x0: 0, x1: 0, x2: 0)
         rand48_set(state: &state, s: seed)
         self.init(state: state)
     }
