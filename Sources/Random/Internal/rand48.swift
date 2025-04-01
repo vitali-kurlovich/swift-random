@@ -36,8 +36,7 @@ func rand48_advance(state: inout rand48_state_t) {
     let x1 = UInt64(state.x1)
     let x2 = UInt64(state.x2)
 
-    var a: UInt64 = 0x000B
-    a += 0xE66D * x0
+    var a: UInt64 = 0xE66D * x0 + 0x000B
     state.x0 = UInt16(truncatingIfNeeded: a & 0xFFFF)
 
     a >>= 16
