@@ -1,5 +1,5 @@
 //
-//  CryptoRandomGenegatorTests.swift
+//  SHA512RandomGenegatorTests.swift
 //  swift-random
 //
 //  Created by Vitali Kurlovich on 30.03.25.
@@ -8,9 +8,9 @@
 import Random
 import XCTest
 
-final class CryptoRandomGenegatorTests: XCTestCase {
+final class SHA512RandomGenegatorTests: XCTestCase {
     func testWithSeed_0() {
-        var generator = CryptoRandomGenegator(seed: 0)
+        var generator = SHA512RandomGenegator(seed: 0)
 
         let result = (0 ..< 32).map { _ in generator.next() }
 
@@ -20,7 +20,7 @@ final class CryptoRandomGenegatorTests: XCTestCase {
     }
 
     func testWithSeed_4598763() {
-        var generator = CryptoRandomGenegator(seed: 4_598_763)
+        var generator = SHA512RandomGenegator(seed: 4_598_763)
 
         let result = (0 ..< 32).map { _ in generator.next() }
 
@@ -31,7 +31,7 @@ final class CryptoRandomGenegatorTests: XCTestCase {
 
     func testWithUUID() {
         let uuid = UUID(uuidString: "4A442C1E-93F6-4196-9087-0834A0EFAE7D")!
-        var generator = CryptoRandomGenegator(uuid: uuid)
+        var generator = SHA512RandomGenegator(uuid: uuid)
 
         let result = (0 ..< 32).map { _ in generator.next() }
 

@@ -15,8 +15,8 @@ struct Benchmark: ParsableCommand {
     mutating func run() throws {
         let benchmark = BenchmarkExecuter()
 
-        benchmark.benchmark(name: "CryptoRandomGenegator") { context in
-            var generator = CryptoRandomGenegator(seed: 0)
+        benchmark.benchmark(name: String(describing: SHA512RandomGenegator.self)) { context in
+            var generator = SHA512RandomGenegator(seed: 0)
             for _ in 0 ..< 10_000_000 {
                 _ = UInt64.random(in: UInt64.min ... UInt64.max, using: &generator)
             }
@@ -24,8 +24,8 @@ struct Benchmark: ParsableCommand {
             context.blackHole(UInt64.random(in: UInt64.min ... UInt64.max, using: &generator))
         }
 
-        benchmark.benchmark(name: "Random48Genegator") { context in
-            var generator = Random48Genegator()
+        benchmark.benchmark(name: String(describing: Ranlux48RandomGenegator.self)) { context in
+            var generator = Ranlux48RandomGenegator()
             for _ in 0 ..< 10_000_000 {
                 _ = UInt64.random(in: UInt64.min ... UInt64.max, using: &generator)
             }

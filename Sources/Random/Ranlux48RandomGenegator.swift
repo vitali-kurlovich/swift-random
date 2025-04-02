@@ -1,5 +1,5 @@
 //
-//  FastRandomGenegator.swift
+//  Ranlux48RandomGenegator.swift
 //  swift-random
 //
 //  Created by Vitali Kurlovich on 30.03.25.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Random48Genegator: RandomNumberGenerator {
+public struct Ranlux48RandomGenegator: RandomNumberGenerator {
     private var state: rand48_state_t
 
     private init(state: rand48_state_t) {
@@ -34,7 +34,7 @@ public struct Random48Genegator: RandomNumberGenerator {
 }
 
 public
-extension Random48Genegator {
+extension Ranlux48RandomGenegator {
     init(uuid: UUID = UUID()) {
         let seed = Self.seed(from: uuid)
         self.init(seed: seed)
@@ -42,7 +42,7 @@ extension Random48Genegator {
 }
 
 private
-extension Random48Genegator {
+extension Ranlux48RandomGenegator {
     static func seed(from: UUID) -> UInt64 {
         let uuid = from.uuid
         let bytes: [UInt8] = [

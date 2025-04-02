@@ -1,5 +1,5 @@
 //
-//  CryptoRandomGenegator.swift
+//  SHA512RandomGenegator.swift
 //  swift-random
 //
 //  Created by Vitali Kurlovich on 30.03.25.
@@ -8,8 +8,9 @@
 import struct Crypto.SHA512
 import struct Foundation.UUID
 
+/// RandomNumberGenerator
 public
-struct CryptoRandomGenegator: RandomNumberGenerator {
+struct SHA512RandomGenegator: RandomNumberGenerator {
     typealias Hash = SHA512
     typealias Digest = Hash.Digest
 
@@ -53,7 +54,7 @@ struct CryptoRandomGenegator: RandomNumberGenerator {
     }
 }
 
-public extension CryptoRandomGenegator {
+public extension SHA512RandomGenegator {
     init(seed: UInt64 = 0) {
         var v = seed.littleEndian
         let n = MemoryLayout<UInt64>.size
