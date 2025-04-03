@@ -1,5 +1,5 @@
 //
-//  rand48.swift
+//  ranlux48.swift
 //  swift-random
 //
 //  Created by Vitali Kurlovich on 31.03.25.

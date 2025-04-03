@@ -33,6 +33,15 @@ struct Benchmark: ParsableCommand {
             context.blackHole(UInt64.random(in: UInt64.min ... UInt64.max, using: &generator))
         }
 
+        benchmark.benchmark(name: String(describing: MT19937RandomGenegator.self)) { context in
+            var generator = MT19937RandomGenegator()
+            for _ in 0 ..< 10_000_000 {
+                _ = UInt64.random(in: UInt64.min ... UInt64.max, using: &generator)
+            }
+
+            context.blackHole(UInt64.random(in: UInt64.min ... UInt64.max, using: &generator))
+        }
+
         benchmark.benchmark(name: "SwiftRandomGenegator") { context in
 
             for _ in 0 ..< 10_000_000 {

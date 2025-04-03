@@ -1,5 +1,5 @@
 //
-//  Rand48Tests.swift
+//  Ranlux48Tests.swift
 //  swift-random
 //
 //  Created by Vitali Kurlovich on 31.03.25.
@@ -8,7 +8,7 @@
 @testable import Random
 import XCTest
 
-final class Rand48Tests: XCTestCase {
+final class Ranlux48Tests: XCTestCase {
     func testSeed_0() {
         var state = rand48_state_t(x0: 0, x1: 0, x2: 0)
         rand48_set(state: &state, s: 0)
