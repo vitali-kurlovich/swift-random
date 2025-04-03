@@ -8,6 +8,7 @@
 import Foundation
 
 extension UUID {
+    @usableFromInline
     var seed: UInt64 {
         let uuid = self.uuid
         let bytes: [UInt8] = [

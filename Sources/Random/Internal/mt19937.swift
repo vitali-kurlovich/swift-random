@@ -8,9 +8,22 @@
 @usableFromInline
 struct mt_state_t: Equatable {
     @usableFromInline
-    var mt: [UInt32] = Array(repeating: 0, count: 624)
+    let mt = FixedSizeBuffer<UInt32>(count: 624)
+
     @usableFromInline
     var mti: Int = 0
+}
+
+extension mt_state_t {
+    init(mt: [UInt32], mti: Int) {
+        assert(mt.count == mt.count)
+
+        for index in 0 ..< mt.count {
+            self.mt[index] = mt[index]
+        }
+
+        self.mti = mti
+    }
 }
 
 @inlinable
