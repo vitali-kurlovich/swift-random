@@ -6,7 +6,7 @@
 //
 
 @usableFromInline
-final class FixedSizeBuffer<Element: BitwiseCopyable> {
+final class FixedSizeBuffer<Element> {
     @usableFromInline
     let count: Int
 
