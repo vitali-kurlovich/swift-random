@@ -8,53 +8,53 @@
 @usableFromInline
 struct rand48_state_t {
     @usableFromInline
-    var x0: UInt16
+    var x0: UInt16 = 0
     @usableFromInline
-    var x1: UInt16
+    var x1: UInt16 = 0
     @usableFromInline
-    var x2: UInt16
+    var x2: UInt16 = 0
 }
 
-@inlinable
-@inline(__always)
-func rand48_set(state: inout rand48_state_t, s: UInt64) {
-    if s == 0 {
-        state.x0 = 0x330E
-        state.x1 = 0xABCD
-        state.x2 = 0x1234
-    } else {
-        state.x0 = 0x330E
-        state.x1 = UInt16(truncatingIfNeeded: s & 0xFFFF)
-        state.x2 = UInt16(truncatingIfNeeded: (s >> 16) & 0xFFFF)
+extension rand48_state_t {
+    @inlinable
+    @inline(__always)
+    mutating func rand48_set(s: UInt64) {
+        if s == 0 {
+            x0 = 0x330E
+            x1 = 0xABCD
+            x2 = 0x1234
+        } else {
+            x0 = 0x330E
+            x1 = UInt16(truncatingIfNeeded: s & 0xFFFF)
+            x2 = UInt16(truncatingIfNeeded: (s >> 16) & 0xFFFF)
+        }
     }
-}
 
-@inlinable
-@inline(__always)
-func rand48_advance(state: inout rand48_state_t) {
-    let x0 = UInt64(state.x0)
-    let x1 = UInt64(state.x1)
-    let x2 = UInt64(state.x2)
+    @inline(__always)
+    mutating func rand48_get() -> UInt64 {
+        rand48_advance()
 
-    var a: UInt64 = 0xE66D * x0 + 0x000B
-    state.x0 = UInt16(truncatingIfNeeded: a & 0xFFFF)
+        let x1 = UInt64(self.x1)
+        let x2 = UInt64(self.x2)
 
-    a >>= 16
-    a += 0xE66D * x1 + 0xDEEC * x0
-    state.x1 = UInt16(truncatingIfNeeded: a & 0xFFFF)
+        return (x2 << 16) + x1
+    }
 
-    a >>= 16
-    a += 0xE66D * x2 + 0xDEEC * x1 + 0x0005 * x0
-    state.x2 = UInt16(truncatingIfNeeded: a & 0xFFFF)
-}
+    @inline(__always)
+    private mutating func rand48_advance() {
+        let x0 = UInt64(self.x0)
+        let x1 = UInt64(self.x1)
+        let x2 = UInt64(self.x2)
 
-@inlinable
-@inline(__always)
-func rand48_get(state: inout rand48_state_t) -> UInt64 {
-    rand48_advance(state: &state)
+        var a: UInt64 = 0xE66D * x0 + 0x000B
+        self.x0 = UInt16(truncatingIfNeeded: a & 0xFFFF)
 
-    let x1 = UInt64(state.x1)
-    let x2 = UInt64(state.x2)
+        a >>= 16
+        a += 0xE66D * x1 + 0xDEEC * x0
+        self.x1 = UInt16(truncatingIfNeeded: a & 0xFFFF)
 
-    return (x2 << 16) + x1
+        a >>= 16
+        a += 0xE66D * x2 + 0xDEEC * x1 + 0x0005 * x0
+        self.x2 = UInt16(truncatingIfNeeded: a & 0xFFFF)
+    }
 }
