@@ -10,8 +10,12 @@ import struct Foundation.UUID
 public struct MT19937RandomGenegator: RandomNumberGenerator {
     private var state = mt_state_t()
 
+    public init(seed: UInt32) {
+        state.mt_set(s: seed)
+    }
+
     public init(seed: UInt64) {
-        state.mt_set(s: .init(truncatingIfNeeded: seed))
+        self.init(seed: UInt32(seed: seed))
     }
 
     public
@@ -19,7 +23,7 @@ public struct MT19937RandomGenegator: RandomNumberGenerator {
         let prev = UInt64(state.mt_get())
         let next = UInt64(state.mt_get())
 
-        return prev ^ (next << 32)
+        return (prev << 32) ^ next
     }
 }
 

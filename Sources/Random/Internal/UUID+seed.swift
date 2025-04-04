@@ -5,7 +5,7 @@
 //  Created by Vitali Kurlovich on 4.04.25.
 //
 
-import Foundation
+import struct Foundation.UUID
 
 extension UUID {
     @usableFromInline
@@ -34,11 +34,10 @@ extension UUID {
         var second: UInt64 = 0
 
         bytes.withUnsafeBytes {
-            let from = $0.baseAddress!
-            memcpy(&first, from, 8)
-            memcpy(&second, from + 8, 8)
+            first = $0.baseAddress!.load(as: UInt64.self)
+            second = $0.baseAddress!.load(fromByteOffset: 8, as: UInt64.self)
         }
 
-        return first.littleEndian ^ second.littleEndian
+        return first ^ second
     }
 }

@@ -15,18 +15,6 @@ struct mt_state_t: Equatable {
 }
 
 extension mt_state_t {
-    init(mt: [UInt32], mti: Int) {
-        assert(mt.count == mt.count)
-
-        for index in 0 ..< mt.count {
-            self.mt[index] = mt[index]
-        }
-
-        self.mti = mti
-    }
-}
-
-extension mt_state_t {
     @inlinable
     @inline(__always)
     mutating func mt_set(s: UInt32) {
@@ -79,5 +67,17 @@ extension mt_state_t {
         mti += 1
 
         return k
+    }
+}
+
+extension mt_state_t {
+    init(mt: [UInt32], mti: Int) {
+        assert(mt.count == mt.count)
+
+        for index in 0 ..< mt.count {
+            self.mt[index] = mt[index]
+        }
+
+        self.mti = mti
     }
 }
