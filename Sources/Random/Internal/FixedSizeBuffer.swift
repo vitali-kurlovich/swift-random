@@ -25,21 +25,6 @@ final class FixedSizeBuffer<Element> {
 }
 
 extension FixedSizeBuffer {
-    convenience init<S: Collection>(_ collection: S) where S.Element == Element {
-        let count = collection.count
-
-        self.init(count: count)
-
-        var index = 0
-
-        for element in collection {
-            self[index] = element
-            index += 1
-        }
-    }
-}
-
-extension FixedSizeBuffer {
     @usableFromInline
     subscript(index: Int) -> Element {
         get {
