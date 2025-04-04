@@ -23,21 +23,57 @@ extension mt_state_t {
         mt[0] = s & 0xFFFF_FFFF
 
         for i in 1 ..< 624 {
-            let mt = UInt64(self.mt[i - 1])
-            let hash = (1_812_433_253 * (mt ^ (mt >> 30)) + UInt64(i)) & 0xFFFF_FFFF
+            let mt = self.mt[i - 1]
+            let hash = (1_812_433_253 * UInt64(mt ^ (mt >> 30)) + UInt64(i)) & 0xFFFF_FFFF
             self.mt[i] = UInt32(truncatingIfNeeded: hash)
         }
         mti = 624
     }
 
-    @inlinable
     @inline(__always)
     mutating func mt_get() -> UInt32 {
-        @inline(__always)
-        func magic<B: BinaryInteger>(_ y: B) -> B {
-            (y & 0x1) != 0 ? 0x9908_B0DF : 0
-        }
+        mt_advance()
 
+        var k = mt[mti]
+        k ^= (k >> 11)
+        k ^= (k << 7) & 0x9D2C_5680
+        k ^= (k << 15) & 0xEFC6_0000
+        k ^= (k >> 18)
+
+        mti += 1
+
+        return k
+    }
+
+    @inline(__always)
+    mutating func mt_get64() -> UInt64 {
+        mt_advance()
+
+        var prev = mt[mti]
+        var next = mt[mti + 1]
+
+        prev ^= (prev >> 11)
+        prev ^= (prev << 7) & 0x9D2C_5680
+        prev ^= (prev << 15) & 0xEFC6_0000
+        prev ^= (prev >> 18)
+
+        next ^= (next >> 11)
+        next ^= (next << 7) & 0x9D2C_5680
+        next ^= (next << 15) & 0xEFC6_0000
+        next ^= (next >> 18)
+
+        mti += 2
+
+        return (UInt64(prev) << 32) ^ UInt64(next)
+    }
+
+    @inline(__always)
+    private func magic<B: BinaryInteger>(_ y: B) -> B {
+        (y & 0x1) != 0 ? 0x9908_B0DF : 0
+    }
+
+    @inline(__always)
+    private mutating func mt_advance() {
         if mti >= 624 {
             var kk = 0
             while kk < 624 - 397 {
@@ -57,16 +93,6 @@ extension mt_state_t {
 
             mti = 0
         }
-
-        var k = mt[mti]
-        k ^= (k >> 11)
-        k ^= (k << 7) & 0x9D2C_5680
-        k ^= (k << 15) & 0xEFC6_0000
-        k ^= (k >> 18)
-
-        mti += 1
-
-        return k
     }
 }
 

@@ -16,9 +16,7 @@ public struct MT19937RandomGenegator: RandomNumberGenerator {
 
     public
     mutating func next() -> UInt64 {
-        let prev = UInt64(state.mt_get())
-        let next = UInt64(state.mt_get())
-        return (prev << 32) ^ next
+        return state.mt_get64()
     }
 }
 
