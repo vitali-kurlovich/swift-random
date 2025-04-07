@@ -69,23 +69,20 @@ extension mt_state_t {
 
     @inline(__always)
     private func magic<B: BinaryInteger>(_ y: B) -> B {
-        (y & 0x1) != 0 ? 0x9908_B0DF : 0
+        (y & 0x1) * 0x9908_B0DF
     }
 
     @inline(__always)
     private mutating func mt_advance() {
         if mti >= .M {
-            var kk = 0
-            while kk < .M - .N {
+            for kk in 0 ..< .M - .N {
                 let y = (mt[kk] & .UPPER_MASK) | (mt[kk + 1] & .LOWER_MASK)
                 mt[kk] = mt[kk + .N] ^ (y >> 1) ^ magic(y)
-                kk += 1
             }
 
-            while kk < .M - 1 {
+            for kk in .M - .N ..< .M - 1 {
                 let y = (mt[kk] & .UPPER_MASK) | (mt[kk + 1] & .LOWER_MASK)
                 mt[kk] = mt[kk + (.N - .M)] ^ (y >> 1) ^ magic(y)
-                kk += 1
             }
 
             let y = (mt[.M - 1] & .UPPER_MASK) | (mt[0] & .LOWER_MASK)
