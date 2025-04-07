@@ -74,22 +74,22 @@ extension mt_state_t {
 
     @inline(__always)
     private mutating func mt_advance() {
-        if mti >= 624 {
+        if mti >= .M {
             var kk = 0
-            while kk < 624 - 397 {
-                let y = (mt[kk] & 0x8000_0000) | (mt[kk + 1] & 0x7FFF_FFFF)
-                mt[kk] = mt[kk + 397] ^ (y >> 1) ^ magic(y)
+            while kk < .M - .N {
+                let y = (mt[kk] & .UPPER_MASK) | (mt[kk + 1] & .LOWER_MASK)
+                mt[kk] = mt[kk + .N] ^ (y >> 1) ^ magic(y)
                 kk += 1
             }
 
-            while kk < 624 - 1 {
-                let y = (mt[kk] & 0x8000_0000) | (mt[kk + 1] & 0x7FFF_FFFF)
-                mt[kk] = mt[kk + (397 - 624)] ^ (y >> 1) ^ magic(y)
+            while kk < .M - 1 {
+                let y = (mt[kk] & .UPPER_MASK) | (mt[kk + 1] & .LOWER_MASK)
+                mt[kk] = mt[kk + (.N - .M)] ^ (y >> 1) ^ magic(y)
                 kk += 1
             }
 
-            let y = (mt[624 - 1] & 0x8000_0000) | (mt[0] & 0x7FFF_FFFF)
-            mt[624 - 1] = mt[397 - 1] ^ (y >> 1) ^ magic(y)
+            let y = (mt[.M - 1] & .UPPER_MASK) | (mt[0] & .LOWER_MASK)
+            mt[.M - 1] = mt[.N - 1] ^ (y >> 1) ^ magic(y)
 
             mti = 0
         }
@@ -106,4 +106,18 @@ extension mt_state_t {
 
         self.mti = mti
     }
+}
+
+private extension UInt32 {
+    @inline(__always)
+    static var UPPER_MASK: UInt32 { 0x8000_0000 }
+    @inline(__always)
+    static var LOWER_MASK: UInt32 { 0x7FFF_FFFF }
+}
+
+private extension Int {
+    @inline(__always)
+    static var M: Int { 624 }
+    @inline(__always)
+    static var N: Int { 397 }
 }
