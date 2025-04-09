@@ -7,16 +7,11 @@
 
 @usableFromInline
 struct mt_state_t: Equatable {
-    @usableFromInline
-    var mt = ContiguousArray(repeating: UInt32(0), count: 624)
-
-    @usableFromInline
-    var mti: Int = 0
+    private var mt = ContiguousArray(repeating: UInt32(0), count: 624)
+    private var mti: Int = 0
 }
 
 extension mt_state_t {
-    @inlinable
-    @inline(__always)
     mutating func mt_set(s: UInt32) {
         let s = s == 0 ? 4357 : s
 
@@ -96,7 +91,6 @@ extension mt_state_t {
 extension mt_state_t {
     init<C: Collection>(mt: C, mti: Int) where C.Element == UInt32 {
         assert(mt.count == mt.count)
-
         self.mt = .init(mt)
         self.mti = mti
     }
