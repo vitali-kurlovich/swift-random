@@ -8,7 +8,7 @@
 @usableFromInline
 struct mt_state_t: Equatable {
     @usableFromInline
-    let mt = FixedSizeBuffer<UInt32>(count: 624)
+    var mt = ContiguousArray(repeating: UInt32(0), count: 624)
 
     @usableFromInline
     var mti: Int = 0
@@ -74,19 +74,19 @@ extension mt_state_t {
 
     @inline(__always)
     private mutating func mt_advance() {
-        if mti >= .M {
-            for kk in 0 ..< .M - .N {
+        if mti >= .N {
+            for kk in 0 ..< .N - .M {
                 let y = (mt[kk] & .UPPER_MASK) | (mt[kk + 1] & .LOWER_MASK)
-                mt[kk] = mt[kk + .N] ^ (y >> 1) ^ magic(y)
+                mt[kk] = mt[kk + .M] ^ (y >> 1) ^ magic(y)
             }
 
-            for kk in .M - .N ..< .M - 1 {
+            for kk in .N - .M ..< .N - 1 {
                 let y = (mt[kk] & .UPPER_MASK) | (mt[kk + 1] & .LOWER_MASK)
-                mt[kk] = mt[kk + (.N - .M)] ^ (y >> 1) ^ magic(y)
+                mt[kk] = mt[kk + (.M - .N)] ^ (y >> 1) ^ magic(y)
             }
 
-            let y = (mt[.M - 1] & .UPPER_MASK) | (mt[0] & .LOWER_MASK)
-            mt[.M - 1] = mt[.N - 1] ^ (y >> 1) ^ magic(y)
+            let y = (mt[.N - 1] & .UPPER_MASK) | (mt[0] & .LOWER_MASK)
+            mt[.N - 1] = mt[.M - 1] ^ (y >> 1) ^ magic(y)
 
             mti = 0
         }
@@ -94,13 +94,10 @@ extension mt_state_t {
 }
 
 extension mt_state_t {
-    init(mt: [UInt32], mti: Int) {
+    init<C:Collection>(mt: C, mti: Int) where C.Element == UInt32 {
         assert(mt.count == mt.count)
 
-        for index in 0 ..< mt.count {
-            self.mt[index] = mt[index]
-        }
-
+        self.mt = .init(mt)
         self.mti = mti
     }
 }
@@ -114,7 +111,7 @@ private extension UInt32 {
 
 private extension Int {
     @inline(__always)
-    static var M: Int { 624 }
+    static var N: Int { 624 }
     @inline(__always)
-    static var N: Int { 397 }
+    static var M: Int { 397 }
 }
