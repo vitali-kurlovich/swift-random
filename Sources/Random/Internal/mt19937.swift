@@ -5,7 +5,6 @@
 //  Created by Vitali Kurlovich on 2.04.25.
 //
 
-@usableFromInline
 struct mt_state_t: Equatable {
     private var mt = ContiguousArray(repeating: UInt32(0), count: 624)
     private var mti: Int = 0
