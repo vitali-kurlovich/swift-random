@@ -94,7 +94,7 @@ extension mt_state_t {
 }
 
 extension mt_state_t {
-    init<C:Collection>(mt: C, mti: Int) where C.Element == UInt32 {
+    init<C: Collection>(mt: C, mti: Int) where C.Element == UInt32 {
         assert(mt.count == mt.count)
 
         self.mt = .init(mt)
