@@ -14,16 +14,14 @@ public struct Ranlux48RandomGenegator: RandomNumberGenerator {
         state.rand48_set(s: seed)
     }
 
-    public
-    mutating func next() -> UInt64 {
+    public mutating func next() -> UInt64 {
         let prev = state.rand48_get()
         let next = state.rand48_get()
         return prev ^ (next << 32)
     }
 }
 
-public
-extension Ranlux48RandomGenegator {
+public extension Ranlux48RandomGenegator {
     init(uuid: UUID = UUID()) {
         self.init(seed: uuid.seed)
     }

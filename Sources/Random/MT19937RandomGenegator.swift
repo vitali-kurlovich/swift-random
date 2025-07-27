@@ -14,14 +14,12 @@ public struct MT19937RandomGenegator: RandomNumberGenerator {
         state.mt_set(s: UInt32(seed: seed))
     }
 
-    public
-    mutating func next() -> UInt64 {
+    public mutating func next() -> UInt64 {
         return state.mt_get64()
     }
 }
 
-public
-extension MT19937RandomGenegator {
+public extension MT19937RandomGenegator {
     init(uuid: UUID = UUID()) {
         self.init(seed: uuid.seed)
     }

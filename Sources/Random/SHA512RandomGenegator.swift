@@ -9,8 +9,7 @@ import struct Crypto.SHA512
 import struct Foundation.UUID
 
 /// RandomNumberGenerator
-public
-struct SHA512RandomGenegator: RandomNumberGenerator {
+public struct SHA512RandomGenegator: RandomNumberGenerator {
     typealias Hash = SHA512
     typealias Digest = Hash.Digest
 
@@ -23,8 +22,7 @@ struct SHA512RandomGenegator: RandomNumberGenerator {
         digest = hash.finalize()
     }
 
-    public
-    mutating func next() -> UInt64 {
+    public mutating func next() -> UInt64 {
         let n = MemoryLayout<UInt64>.size
 
         if offset + n > Digest.byteCount {
@@ -42,8 +40,7 @@ struct SHA512RandomGenegator: RandomNumberGenerator {
         return v
     }
 
-    private
-    mutating func invalidateDigits() {
+    private mutating func invalidateDigits() {
         var hash = Hash()
         digest.withUnsafeBytes { bufferPointer in
             hash.update(bufferPointer: bufferPointer)

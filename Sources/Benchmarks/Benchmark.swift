@@ -43,7 +43,6 @@ struct Benchmark: ParsableCommand {
         }
 
         benchmark.benchmark(name: "SwiftRandomGenegator") { context in
-
             for _ in 0 ..< 10_000_000 {
                 _ = UInt64.random(in: UInt64.min ... UInt64.max)
             }
