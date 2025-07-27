@@ -16,7 +16,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - uses: vapor/swiftly-action@v0.2
+    - uses: SwiftyLab/setup-swift@latest
       with:
         toolchain: latest # optional
         
