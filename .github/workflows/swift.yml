@@ -15,9 +15,9 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: List available Xcode versions
-      run: ls /Applications | grep Xcode
+    - uses: swift-actions/setup-swift@v2
+    - name: Get swift version
+      run: swift --version
 
     - name: Build
       run: swift build -v
