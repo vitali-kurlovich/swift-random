@@ -15,15 +15,13 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    #- uses: actions/checkout@v4
-    - name: Load swiftly
-      run: curl -O https://download.swift.org/swiftly/darwin/swiftly.pkg && installer -pkg swiftly.pkg -target CurrentUserHomeDirectory && ~/.swiftly/bin/swiftly init --quiet-shell-followup && . "${SWIFTLY_HOME_DIR:-$HOME/.swiftly}/env.sh" &&  hash -r 
-
-    - name: Install 
-      run: ~/.swiftly/bin/swiftly init
-
-    - name: List Files 
-      run: ls -l
+    - uses: actions/checkout@v4
+    - uses: vapor/swiftly-action@v0.2
+      with:
+        toolchain: latest # optional
+        
+    - name: Swift Version
+      run: swift --version
   
     - name: Build
       run: swift build -v
