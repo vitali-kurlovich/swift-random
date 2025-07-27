@@ -21,6 +21,9 @@ jobs:
 
     - name: Install 
       run: ~/.swiftly/bin/swiftly init
+
+    - name: List Files 
+      run: ls -l
   
     - name: Build
       run: swift build -v
