@@ -19,6 +19,9 @@ jobs:
     - name: Get swift version
       run: swift --version
 
+    - name: List files
+      run: ls -l
+      
     - name: Build
       run: swift build -v
     - name: Run tests
