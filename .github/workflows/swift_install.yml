@@ -17,10 +17,10 @@ jobs:
     steps:
     #- uses: actions/checkout@v4
     - name: Load swiftly
-      run: curl -O https://download.swift.org/swiftly/darwin/swiftly.pkg && installer -pkg swiftly.pkg -target CurrentUserHomeDirectory && ~/.swiftly/bin/swiftly init --quiet-shell-followup && . "${SWIFTLY_HOME_DIR:-$HOME/.swiftly}/env.sh" &&  hash -r
+      run: curl -O https://download.swift.org/swiftly/darwin/swiftly.pkg && installer -pkg swiftly.pkg -target CurrentUserHomeDirectory && ~/.swiftly/bin/swiftly init --quiet-shell-followup && . "${SWIFTLY_HOME_DIR:-$HOME/.swiftly}/env.sh" &&  hash -r 
 
     - name: Install 
-      run: swiftly install main-snapshot
+      run: ~/.swiftly/bin/swiftly init
   
     - name: Build
       run: swift build -v
