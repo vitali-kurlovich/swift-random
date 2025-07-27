@@ -9,21 +9,28 @@ on:
   pull_request:
     branches: [ "main" ]
 
+
 jobs:
   build:
-
-    runs-on: macos-latest
-
+    name: Swift ${{ matrix.swift }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        swift: ["6.1", "6.2"]
+    
     steps:
     - uses: actions/checkout@v4
     - uses: SwiftyLab/setup-swift@latest
       with:
-        toolchain: latest # optional
-        
-    - name: Swift Version
+        swift-version: ${{ matrix.swift }}
+    
+    - name: Get swift version
       run: swift --version
-  
+
     - name: Build
       run: swift build -v
+
     - name: Run tests
       run: swift test -v
+
