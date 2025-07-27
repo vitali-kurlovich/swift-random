@@ -8,12 +8,13 @@
 import struct Foundation.UUID
 
 public struct MT19937RandomGenegator: RandomNumberGenerator {
-    private var state = mt_state_t()
+    @usableFromInline var state = mt_state_t()
 
     public init(seed: UInt64) {
         state.mt_set(s: UInt32(seed: seed))
     }
 
+    @inlinable
     public mutating func next() -> UInt64 {
         return state.mt_get64()
     }

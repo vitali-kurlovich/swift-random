@@ -5,6 +5,7 @@
 //  Created by Vitali Kurlovich on 2.04.25.
 //
 
+@usableFromInline
 struct mt_state_t: Equatable {
     private var mt = ContiguousArray(repeating: UInt32(0), count: 624)
     private var mti: Int = 0
@@ -24,6 +25,7 @@ extension mt_state_t {
         mti = 624
     }
 
+    @usableFromInline
     @inline(__always)
     mutating func mt_get() -> UInt32 {
         mt_advance()
@@ -39,6 +41,7 @@ extension mt_state_t {
         return k
     }
 
+    @usableFromInline
     @inline(__always)
     mutating func mt_get64() -> UInt64 {
         mt_advance()
