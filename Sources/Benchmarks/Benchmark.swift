@@ -79,6 +79,16 @@ struct Benchmark: ParsableCommand {
             context.blackHole(generator.next())
         }
 
+        benchmark.benchmark(name: "Swift Bool (MT19937) ") { context in
+            var generator = MT19937RandomGenegator()
+
+            for _ in 0 ..< 10_000_000 {
+                _ = Bool.random(using: &generator)
+            }
+
+            context.blackHole(Bool.random(using: &generator))
+        }
+
         benchmark.benchmark(name: "Swift Bool Genegator") { context in
             for _ in 0 ..< 10_000_000 {
                 _ = Bool.random()
