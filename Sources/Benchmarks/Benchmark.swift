@@ -12,6 +12,15 @@ import Random
 
 @main
 struct Benchmark: ParsableCommand {
+    @Argument(help: "The phrase to repeat.")
+    var `repeat`: Int = 5
+
+    // private let benchmark = BenchmarkExecuter()
+
+    func benchmark(name _: String, task _: @escaping (BenchmarkContext) -> Void) {}
+
+    func prepare() {}
+
     mutating func run() throws {
         let benchmark = BenchmarkExecuter()
 
@@ -48,6 +57,34 @@ struct Benchmark: ParsableCommand {
             }
 
             context.blackHole(UInt64.random(in: UInt64.min ... UInt64.max))
+        }
+
+        benchmark.benchmark(name: "BitRandomGenerator (SHA512)") { context in
+            var generator = BitRandomGenerator(SHA512RandomGenegator())
+
+            for _ in 0 ..< 10_000_000 {
+                _ = generator.next()
+            }
+
+            context.blackHole(generator.next())
+        }
+
+        benchmark.benchmark(name: "BitRandomGenerator (MT19937)") { context in
+            var generator = BitRandomGenerator(MT19937RandomGenegator())
+
+            for _ in 0 ..< 10_000_000 {
+                _ = generator.next()
+            }
+
+            context.blackHole(generator.next())
+        }
+
+        benchmark.benchmark(name: "Swift Bool Genegator") { context in
+            for _ in 0 ..< 10_000_000 {
+                _ = Bool.random()
+            }
+
+            context.blackHole(Bool.random())
         }
 
         benchmark.start()

@@ -67,7 +67,7 @@ public extension SHA512RandomGenegator {
         self.init(bufferPointer: .init(buffer))
     }
 
-    init(uuid: UUID = UUID()) {
+    init(uuid: UUID) {
         let uuid = uuid.uuid
         let bytes: [UInt8] = [
             uuid.0,
