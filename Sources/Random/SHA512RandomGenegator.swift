@@ -67,6 +67,22 @@ public extension SHA512RandomGenegator {
         self.init(bufferPointer: .init(buffer))
     }
 
+    @available(macOS 15.0, *)
+    init(seed: UInt128) {
+        var v = seed.littleEndian
+        let n = MemoryLayout<UInt128>.size
+
+        let buffer = UnsafeMutableRawBufferPointer.allocate(byteCount: n, alignment: 0)
+
+        defer {
+            buffer.deallocate()
+        }
+
+        buffer.baseAddress?.copyMemory(from: &v, byteCount: n)
+
+        self.init(bufferPointer: .init(buffer))
+    }
+
     init(uuid: UUID) {
         let uuid = uuid.uuid
         let bytes: [UInt8] = [

@@ -10,8 +10,8 @@ import struct Foundation.UUID
 public struct MT19937RandomGenegator: RandomNumberGenerator {
     @usableFromInline var state = mt_state_t()
 
-    public init(seed: UInt64) {
-        state.mt_set(s: UInt32(seed: seed))
+    public init(seed: UInt32) {
+        state.mt_set(s: seed)
     }
 
     @inlinable
@@ -22,6 +22,6 @@ public struct MT19937RandomGenegator: RandomNumberGenerator {
 
 public extension MT19937RandomGenegator {
     init(uuid: UUID = UUID()) {
-        self.init(seed: uuid.seed)
+        self.init(seed: UInt32(seed: uuid.seed))
     }
 }
