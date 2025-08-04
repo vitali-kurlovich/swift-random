@@ -6,15 +6,16 @@
 //
 
 public struct BitRandomGenerator<T> where T: RandomNumberGenerator {
-    var generator: T
+    @usableFromInline var generator: T
 
-    var last: UInt64 = 0
-    var mask: UInt64 = 0
+    @usableFromInline var last: UInt64 = 0
+    @usableFromInline var mask: UInt64 = 0
 
     public init(_ generator: T) {
         self.generator = generator
     }
 
+    @inlinable
     public mutating func next() -> Bool {
         if mask == 0 {
             last = generator.next()
