@@ -1,5 +1,5 @@
 //
-//  BitRandomGeneratorTest.swift
+//  BitRandomGeneratorTests.swift
 //  swift-random
 //
 //  Created by Vitali Kurlovich on 5.08.25.

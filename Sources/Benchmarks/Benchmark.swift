@@ -97,6 +97,34 @@ struct Benchmark: ParsableCommand {
             context.blackHole(Bool.random())
         }
 
+        benchmark.benchmark(name: "ByteRandomGenerator (MT19937)") { context in
+            var generator = ByteRandomGenerator(MT19937RandomGenegator())
+
+            for _ in 0 ..< 10_000_000 {
+                _ = generator.next()
+            }
+
+            context.blackHole(generator.next())
+        }
+
+        benchmark.benchmark(name: "Swift Byte (MT19937) ") { context in
+            var generator = MT19937RandomGenegator()
+
+            for _ in 0 ..< 10_000_000 {
+                _ = UInt8.random(in: .min ... .max, using: &generator)
+            }
+
+            context.blackHole(UInt8.random(in: .min ... .max, using: &generator))
+        }
+
+        benchmark.benchmark(name: "Swift Byte Genegator") { context in
+            for _ in 0 ..< 10_000_000 {
+                _ = UInt8.random(in: .min ... .max)
+            }
+
+            context.blackHole(UInt8.random(in: .min ... .max))
+        }
+
         benchmark.start()
     }
 }
