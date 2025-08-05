@@ -21,10 +21,8 @@ public struct ByteRandomGenerator<T> where T: RandomNumberGenerator {
             last = generator.next()
         }
 
-        defer {
-            last = last >> 8
-        }
-
-        return UInt8(last & 0xFF)
+        let result = UInt8(last & 0xFF)
+        last = last >> 8
+        return result
     }
 }
