@@ -23,10 +23,8 @@ public struct BitRandomGenerator<T> where T: RandomNumberGenerator {
             last = generator.next()
         }
 
-        defer {
-            mask = mask << 1
-        }
-
-        return (last & mask) != 0
+        let result = (last & mask) != 0
+        mask = mask << 1
+        return result
     }
 }
