@@ -66,7 +66,7 @@ extension mt_state_t {
 
     @inline(__always)
     private func magic<B: BinaryInteger>(_ y: B) -> B {
-        (y & 0x1) != 0 ? 0x9908_B0DF : 0
+        (y & 0x1) * 0x9908_B0DF
     }
 
     @inline(__always)
