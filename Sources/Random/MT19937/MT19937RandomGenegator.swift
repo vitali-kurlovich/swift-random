@@ -25,3 +25,16 @@ public extension MT19937RandomGenegator {
         self.init(seed: UInt32(seed: uuid.seed))
     }
 }
+
+public struct MT19937_64_RandomGenegator: RandomNumberGenerator {
+    @usableFromInline var state: mt19937_64
+
+    public init(seed: UInt64 = 5489) {
+        state = .init(seed: seed)
+    }
+
+    @inlinable
+    public mutating func next() -> UInt64 {
+        return state.rand()
+    }
+}
