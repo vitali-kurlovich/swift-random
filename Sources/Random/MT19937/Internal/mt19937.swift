@@ -56,13 +56,15 @@ extension mt19937_state {
         var next = mt[mti + 1]
 
         prev ^= (prev >> 11)
-        prev ^= (prev << 7) & 0x9D2C_5680
-        prev ^= (prev << 15) & 0xEFC6_0000
-        prev ^= (prev >> 18)
-
         next ^= (next >> 11)
+
+        prev ^= (prev << 7) & 0x9D2C_5680
         next ^= (next << 7) & 0x9D2C_5680
+
+        prev ^= (prev << 15) & 0xEFC6_0000
         next ^= (next << 15) & 0xEFC6_0000
+
+        prev ^= (prev >> 18)
         next ^= (next >> 18)
 
         mti += 2
@@ -79,26 +81,28 @@ private extension mt19937_state {
 
     @inline(__always)
     mutating func mt_advance() {
-        if mti >= .N {
-            var i = 0
-
-            while i < .N - .M {
-                let y = (mt[i] & .UPPER_MASK) | (mt[i + 1] & .LOWER_MASK)
-                mt[i] = mt[i + .M] ^ (y >> 1) ^ magic(y)
-                i += 1
-            }
-
-            while i < .N - 1 {
-                let y = (mt[i] & .UPPER_MASK) | (mt[i + 1] & .LOWER_MASK)
-                mt[i] = mt[i + (.M - .N)] ^ (y >> 1) ^ magic(y)
-                i += 1
-            }
-
-            let y = (mt[.N - 1] & .UPPER_MASK) | (mt[0] & .LOWER_MASK)
-            mt[.N - 1] = mt[.M - 1] ^ (y >> 1) ^ magic(y)
-
-            mti = 0
+        if mti < .N {
+            return
         }
+
+        var i = 0
+
+        while i < .N - .M {
+            let y = (mt[i] & .UPPER_MASK) | (mt[i + 1] & .LOWER_MASK)
+            mt[i] = mt[i + .M] ^ (y >> 1) ^ magic(y)
+            i += 1
+        }
+
+        while i < .N - 1 {
+            let y = (mt[i] & .UPPER_MASK) | (mt[i + 1] & .LOWER_MASK)
+            mt[i] = mt[i + (.M - .N)] ^ (y >> 1) ^ magic(y)
+            i += 1
+        }
+
+        let y = (mt[.N - 1] & .UPPER_MASK) | (mt[0] & .LOWER_MASK)
+        mt[.N - 1] = mt[.M - 1] ^ (y >> 1) ^ magic(y)
+
+        mti = 0
     }
 }
 
