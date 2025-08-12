@@ -19,8 +19,12 @@ extension mt_state_t {
 
         for i in 1 ..< 624 {
             let mt = self.mt[i - 1]
-            let hash = (1_812_433_253 * UInt64(mt ^ (mt >> 30)) + UInt64(i)) & 0xFFFF_FFFF
-            self.mt[i] = UInt32(truncatingIfNeeded: hash)
+
+            self.mt[i] = (mt ^ (mt >> 30))
+                .multipliedReportingOverflow(by: 1_812_433_253)
+                .partialValue
+                .addingReportingOverflow(UInt32(i))
+                .partialValue
         }
         mti = 624
     }
@@ -72,14 +76,18 @@ extension mt_state_t {
     @inline(__always)
     private mutating func mt_advance() {
         if mti >= .N {
-            for kk in 0 ..< .N - .M {
-                let y = (mt[kk] & .UPPER_MASK) | (mt[kk + 1] & .LOWER_MASK)
-                mt[kk] = mt[kk + .M] ^ (y >> 1) ^ magic(y)
+            var i = 0
+
+            while i < .N - .M {
+                let y = (mt[i] & .UPPER_MASK) | (mt[i + 1] & .LOWER_MASK)
+                mt[i] = mt[i + .M] ^ (y >> 1) ^ magic(y)
+                i += 1
             }
 
-            for kk in .N - .M ..< .N - 1 {
-                let y = (mt[kk] & .UPPER_MASK) | (mt[kk + 1] & .LOWER_MASK)
-                mt[kk] = mt[kk + (.M - .N)] ^ (y >> 1) ^ magic(y)
+            while i < .N - 1 {
+                let y = (mt[i] & .UPPER_MASK) | (mt[i + 1] & .LOWER_MASK)
+                mt[i] = mt[i + (.M - .N)] ^ (y >> 1) ^ magic(y)
+                i += 1
             }
 
             let y = (mt[.N - 1] & .UPPER_MASK) | (mt[0] & .LOWER_MASK)
