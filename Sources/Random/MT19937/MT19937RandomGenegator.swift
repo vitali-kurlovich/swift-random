@@ -8,7 +8,7 @@
 import struct Foundation.UUID
 
 public struct MT19937RandomGenegator: RandomNumberGenerator {
-    @usableFromInline var state = mt_state_t()
+    @usableFromInline var state = mt19937_state()
 
     public init(seed: UInt32) {
         state.mt_set(s: seed)

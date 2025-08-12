@@ -6,18 +6,20 @@
 //
 
 @usableFromInline
-struct mt_state_t: Equatable {
+struct mt19937_state: Equatable {
     private var mt = ContiguousArray(repeating: UInt32(0), count: 624)
     private var mti: Int = 0
 }
 
-extension mt_state_t {
+extension mt19937_state {
+    @usableFromInline
+    @inline(__always)
     mutating func mt_set(s: UInt32) {
         let s = s == 0 ? 4357 : s
 
         mt[0] = s & 0xFFFF_FFFF
 
-        for i in 1 ..< 624 {
+        for i in 1 ..< .N {
             let mt = self.mt[i - 1]
 
             self.mt[i] = (mt ^ (mt >> 30))
@@ -26,7 +28,7 @@ extension mt_state_t {
                 .addingReportingOverflow(UInt32(i))
                 .partialValue
         }
-        mti = 624
+        mti = .N
     }
 
     @usableFromInline
@@ -67,14 +69,16 @@ extension mt_state_t {
 
         return (UInt64(prev) << 32) ^ UInt64(next)
     }
+}
 
+private extension mt19937_state {
     @inline(__always)
-    private func magic<B: BinaryInteger>(_ y: B) -> B {
+    func magic(_ y: UInt32) -> UInt32 {
         (y & 0x1) * 0x9908_B0DF
     }
 
     @inline(__always)
-    private mutating func mt_advance() {
+    mutating func mt_advance() {
         if mti >= .N {
             var i = 0
 
@@ -98,7 +102,7 @@ extension mt_state_t {
     }
 }
 
-extension mt_state_t {
+extension mt19937_state {
     init<C: Collection>(mt: C, mti: Int) where C.Element == UInt32 {
         assert(mt.count == mt.count)
         self.mt = .init(mt)
