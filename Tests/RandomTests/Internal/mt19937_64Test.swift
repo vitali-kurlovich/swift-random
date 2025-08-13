@@ -13,7 +13,7 @@ func mt19937_64_seed_0() {
     var generator = mt19937_64(seed: 0)
 
     let result = (0 ..< 1000).map { _ in
-        generator.rand()
+        generator.random()
     }
 
     let expected: [UInt64] = [
@@ -128,7 +128,7 @@ func mt19937_64_seed_0x203e000e1dda79a0() {
     var generator = mt19937_64(seed: 0x203E_000E_1DDA_79A0)
 
     let result = (0 ..< 1000).map { _ in
-        generator.rand()
+        generator.random()
     }
 
     let expected: [UInt64] = [

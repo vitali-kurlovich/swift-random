@@ -34,7 +34,7 @@ extension mt19937_64 {
 
     @usableFromInline
     @inline(__always)
-    mutating func rand() -> UInt64 {
+    mutating func random() -> UInt64 {
         if mti >= .NN {
             var i = 0
             var x: UInt64

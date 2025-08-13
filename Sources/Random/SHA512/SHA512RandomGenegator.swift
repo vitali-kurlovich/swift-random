@@ -6,7 +6,7 @@
 //
 
 import struct Crypto.SHA512
-import struct Foundation.UUID
+import Foundation
 
 /// RandomNumberGenerator
 public struct SHA512RandomGenegator: RandomNumberGenerator {
@@ -14,13 +14,7 @@ public struct SHA512RandomGenegator: RandomNumberGenerator {
     typealias Digest = Hash.Digest
 
     private var digest: Digest
-    private var offset: Int = 0
-
-    init(bufferPointer: UnsafeRawBufferPointer) {
-        var hash = Hash()
-        hash.update(bufferPointer: bufferPointer)
-        digest = hash.finalize()
-    }
+    private var offset: Int
 
     public mutating func next() -> UInt64 {
         let n = MemoryLayout<UInt64>.size
@@ -39,35 +33,21 @@ public struct SHA512RandomGenegator: RandomNumberGenerator {
 
         return v
     }
-
-    private mutating func invalidateDigits() {
-        var hash = Hash()
-        digest.withUnsafeBytes { bufferPointer in
-            hash.update(bufferPointer: bufferPointer)
-        }
-
-        digest = hash.finalize()
-        offset = 0
-    }
 }
 
+// MARK: - Init
+
 public extension SHA512RandomGenegator {
-    init(seed: UInt64 = 0) {
-        var v = seed.littleEndian
-        let n = MemoryLayout<UInt64>.size
+    init(seed: UInt64) {
+        var seed = seed
 
-        let buffer = UnsafeMutableRawBufferPointer.allocate(byteCount: n, alignment: 0)
+        let data = Data(bytes: &seed,
+                        count: MemoryLayout.size(ofValue: seed))
 
-        defer {
-            buffer.deallocate()
-        }
-
-        buffer.baseAddress?.copyMemory(from: &v, byteCount: n)
-
-        self.init(bufferPointer: .init(buffer))
+        self.init(data)
     }
 
-    init(uuid: UUID) {
+    init(uuid: UUID = UUID()) {
         let uuid = uuid.uuid
         let bytes: [UInt8] = [
             uuid.0,
@@ -88,14 +68,28 @@ public extension SHA512RandomGenegator {
             uuid.15,
         ]
 
-        let buffer = UnsafeMutableRawBufferPointer.allocate(byteCount: bytes.count, alignment: 0)
+        let data = Data(bytes)
+        self.init(data)
+    }
 
-        defer {
-            buffer.deallocate()
+    init<D: DataProtocol>(_ data: D) {
+        var hash = Hash()
+        hash.update(data: data)
+        let digest = hash.finalize()
+        self.init(digest: digest, offset: 0)
+    }
+}
+
+// MARK: - Private
+
+private extension SHA512RandomGenegator {
+    mutating func invalidateDigits() {
+        var hash = Hash()
+        digest.withUnsafeBytes { bufferPointer in
+            hash.update(bufferPointer: bufferPointer)
         }
 
-        buffer.copyBytes(from: bytes)
-
-        self.init(bufferPointer: .init(buffer))
+        digest = hash.finalize()
+        offset = 0
     }
 }
