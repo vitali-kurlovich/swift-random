@@ -1,5 +1,5 @@
 //
-//  mt19937_64Test.swift
+//  mt19937_64_Test.swift
 //  swift-random
 //
 //  Created by Vitali Kurlovich on 13.08.25.

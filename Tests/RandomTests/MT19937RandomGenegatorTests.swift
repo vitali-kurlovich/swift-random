@@ -6,7 +6,7 @@
 //
 
 import Foundation
-@testable import Random
+import Random
 import Testing
 
 @Test("MT19937 Seed 0")
