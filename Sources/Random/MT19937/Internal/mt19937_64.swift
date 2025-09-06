@@ -7,7 +7,7 @@
 
 @usableFromInline
 struct mt19937_64: Equatable {
-    private var mt = ContiguousArray(repeating: UInt64(0), count: .NN)
+    private var mt: ContiguousArray<UInt64> = .init(repeating: UInt64(0), count: .NN)
     private var mti: Int = 0
 }
 
@@ -68,6 +68,78 @@ extension mt19937_64 {
         return x
     }
 }
+
+#if swift(>=6.2)
+
+    @available(iOS 26.0, *)
+    @available(macOS 26.0, *)
+    @usableFromInline
+    struct fast_mt19937_64 {
+        private var mt: InlineArray<312, UInt64> = .init(repeating: 0)
+        private var mti: Int = 0
+    }
+
+    @available(iOS 26.0, *)
+    @available(macOS 26.0, *)
+    extension fast_mt19937_64 {
+        @inline(__always)
+        init(seed: UInt64 = 5489) {
+            var mt: InlineArray<312, UInt64> = .init(repeating: 0)
+            var mti = 1
+
+            mt[0] = seed
+
+            while mti < .NN {
+                mt[mti] = (mt[mti - 1] ^ (mt[mti - 1] >> 62))
+                    .multipliedReportingOverflow(by: 6_364_136_223_846_793_005)
+                    .partialValue
+                    .addingReportingOverflow(UInt64(mti))
+                    .partialValue
+
+                mti += 1
+            }
+
+            self.init(mt: mt, mti: mti)
+        }
+
+        @usableFromInline
+        @inline(__always)
+        mutating func random() -> UInt64 {
+            if mti >= .NN {
+                var i = 0
+                var x: UInt64
+
+                while i < .NN - .MM {
+                    x = (mt[i] & .UM) | (mt[i + 1] & .LM)
+                    mt[i] = mt[i + .MM] ^ (x >> 1) ^ ((x & 0x1) * .MATRIX_A)
+                    i += 1
+                }
+
+                while i < .NN - 1 {
+                    x = (mt[i] & .UM) | (mt[i + 1] & .LM)
+                    mt[i] = mt[i + (.MM - .NN)] ^ (x >> 1) ^ ((x & 0x1) * .MATRIX_A)
+                    i += 1
+                }
+
+                x = (mt[.NN - 1] & .UM) | (mt[0] & .LM)
+                mt[.NN - 1] = mt[.MM - 1] ^ (x >> 1) ^ ((x & 0x1) * .MATRIX_A)
+
+                mti = 0
+            }
+
+            var x = mt[mti]
+            mti += 1
+
+            x ^= (x >> 29) & 0x5555_5555_5555_5555
+            x ^= (x << 17) & 0x71D6_7FFF_EDA6_0000
+            x ^= (x << 37) & 0xFFF7_EEE0_0000_0000
+            x ^= (x >> 43)
+
+            return x
+        }
+    }
+
+#endif // swift(>=6.2)
 
 private extension UInt64 {
     @inline(__always)

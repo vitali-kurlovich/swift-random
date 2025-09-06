@@ -5,25 +5,40 @@
 //  Created by Vitali Kurlovich on 27.07.25.
 //
 
-public func shuffle<T, S: Sequence>(_ collection: S, using generator: inout T) -> [S.Element] where T: RandomNumberGenerator {
-    var array = Array(collection)
-
-    guard array.count > 1 else {
-        return array
+public extension Sequence {
+    func shuffled<T>(algorithm: ShuffleAlgorithm = .default, using generator: inout T) -> [Element] where T: RandomNumberGenerator {
+        switch algorithm {
+        case .default:
+            return defaultShuffled(using: &generator)
+        }
     }
-
-    var result: [S.Element] = []
-    while array.count > 1, let index = array.indices.randomElement(using: &generator) {
-        let element = array.remove(at: index)
-        result.append(element)
-    }
-
-    result.append(contentsOf: array)
-
-    return result
 }
 
-public func shuffle<S: Sequence>(_ collection: S) -> [S.Element] {
-    var generator = MT19937RandomGenegator()
-    return shuffle(collection, using: &generator)
+public enum ShuffleAlgorithm {
+    case `default`
 }
+
+extension Sequence {
+    @inlinable
+    func defaultShuffled<T>(using generator: inout T) -> [Element] where T: RandomNumberGenerator {
+        var array = Array(self)
+
+        guard array.count > 1 else {
+            return array
+        }
+
+        var result: [Element] = []
+        result.reserveCapacity(array.count)
+
+        while array.count > 1, let index = array.indices.randomElement(using: &generator) {
+            let element = array.remove(at: index)
+            result.append(element)
+        }
+
+        result.append(contentsOf: array)
+
+        return result
+    }
+}
+
+// @inlinable public func shuffled() -> [Element]

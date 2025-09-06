@@ -51,6 +51,20 @@ struct Benchmark: ParsableCommand {
             context.blackHole(UInt64.random(in: UInt64.min ... UInt64.max, using: &generator))
         }
 
+        #if swift(>=6.2)
+            if #available(macOS 26.0, *) {
+                benchmark.benchmark(name: String(describing: FastMT19937RandomGenegator.self)) { context in
+                    var generator = FastMT19937RandomGenegator()
+                    for _ in 0 ..< 10_000_000 {
+                        _ = UInt64.random(in: UInt64.min ... UInt64.max, using: &generator)
+                    }
+
+                    context.blackHole(UInt64.random(in: UInt64.min ... UInt64.max, using: &generator))
+                }
+            }
+
+        #endif // swift(>=6.2)
+
         benchmark.benchmark(name: "SwiftRandomGenegator") { context in
             for _ in 0 ..< 10_000_000 {
                 _ = UInt64.random(in: UInt64.min ... UInt64.max)
