@@ -10,12 +10,79 @@ import Testing
 
 @Test("Shuffle empty")
 func shuffleEmpty() {
-    let array: [Int] = []
-    // #expect(shuffle(array) == array)
+    var array: [Int] = []
+    var generator = MT19937RandomGenegator(seed: 0)
+    array.shuffle(algorithm: .default, using: &generator)
+    #expect(array == [])
+
+    #expect([Int]().shuffled(algorithm: .default, using: &generator) == [])
+    #expect(EmptyCollection<Int>().shuffled(algorithm: .default, using: &generator) == [])
 }
 
 @Test("Shuffle One")
 func shuffleOne() {
-    let array = CollectionOfOne(12)
-    // #expect(shuffle(array) == [12])
+    var generator = MT19937RandomGenegator(seed: 0)
+    var array = [12]
+    array.shuffle(algorithm: .default, using: &generator)
+    #expect(array == [12])
+    #expect(CollectionOfOne(12).shuffled(algorithm: .default, using: &generator) == [12])
 }
+
+@Test("Shuffle (Fisher Yates)")
+func shuffleArray() {
+    var array: [Int] = [1, 2, 3, 4, 5]
+    var generator = MT19937RandomGenegator(seed: 1234)
+    array.shuffle(algorithm: .default, using: &generator)
+
+    #expect(array == [5, 2, 1, 3, 4])
+
+    generator = MT19937RandomGenegator(seed: 1234)
+    #expect([1, 2, 3, 4, 5].shuffled(algorithm: .default, using: &generator) == [5, 2, 1, 3, 4])
+}
+
+#if swift(>=6.2)
+    @available(macOS 26.0, *)
+    @Test("Shuffle One InlineArray")
+    func shuffleOneInlineArray() {
+        var generator = MT19937RandomGenegator(seed: 0)
+
+        var inlineArray: InlineArray = [16]
+
+        inlineArray.shuffle(algorithm: .default, using: &generator)
+        #expect(inlineArray.count == 1)
+        #expect(inlineArray[0] == 16)
+    }
+
+    @available(macOS 26.0, *)
+    @Test("Shuffle InlineArray (Fisher Yates)")
+    func shuffleInlineArray() {
+        var array: InlineArray = [1, 2, 3, 4, 5]
+
+        var generator = MT19937RandomGenegator(seed: 1234)
+        array.shuffle(algorithm: .default, using: &generator)
+
+        let expected: InlineArray = [5, 2, 1, 3, 4]
+
+        #expect(array.count == expected.count)
+
+        #expect(array[0] == expected[0])
+        #expect(array[1] == expected[1])
+        #expect(array[2] == expected[2])
+        #expect(array[3] == expected[3])
+        #expect(array[4] == expected[4])
+
+        generator = MT19937RandomGenegator(seed: 1234)
+        let newArray: InlineArray = [1, 2, 3, 4, 5]
+
+        let copy = newArray.shuffled(algorithm: .default, using: &generator)
+
+        #expect(copy.count == expected.count)
+
+        #expect(copy[0] == expected[0])
+        #expect(copy[1] == expected[1])
+        #expect(copy[2] == expected[2])
+        #expect(copy[3] == expected[3])
+        #expect(copy[4] == expected[4])
+    }
+
+#endif // swift(>=6.2)
