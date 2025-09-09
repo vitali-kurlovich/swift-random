@@ -42,7 +42,11 @@ extension mt19937_64 {
             while i < .NN - .MM {
                 x = (mt[i] & .UM) | (mt[i + 1] & .LM)
                 mt[i] = mt[i + .MM] ^ (x >> 1) ^ ((x & 0x1) * .MATRIX_A)
-                i += 1
+
+                x = (mt[i + 1] & .UM) | (mt[i + 2] & .LM)
+                mt[i + 1] = mt[i + .MM + 1] ^ (x >> 1) ^ ((x & 0x1) * .MATRIX_A)
+
+                i += 2
             }
 
             while i < .NN - 1 {
