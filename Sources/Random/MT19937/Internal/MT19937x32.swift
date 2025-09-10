@@ -1,17 +1,17 @@
 //
-//  mt19937_32.swift
+//  MT19937x32.swift
 //  swift-random
 //
 //  Created by Vitali Kurlovich on 2.04.25.
 //
 
 @usableFromInline
-struct mt19937_32: Equatable {
+struct MT19937x32: Equatable {
     private var mt = ContiguousArray(repeating: UInt32(0), count: 624)
     private var mti: Int = 0
 }
 
-extension mt19937_32 {
+extension MT19937x32 {
     @usableFromInline
     @inline(__always)
     init(seed: UInt32 = 4357) {
@@ -38,7 +38,7 @@ extension mt19937_32 {
     }
 }
 
-extension mt19937_32 {
+extension MT19937x32 {
     @usableFromInline
     @inline(__always)
     mutating func random() -> UInt32 {
@@ -75,7 +75,7 @@ extension mt19937_32 {
     }
 }
 
-extension mt19937_32 {
+extension MT19937x32 {
     init<C: Collection>(mt: C, mti: Int) where C.Element == UInt32 {
         assert(mt.count == mt.count)
         self.mt = .init(mt)

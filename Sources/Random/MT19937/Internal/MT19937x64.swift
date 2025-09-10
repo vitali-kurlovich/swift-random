@@ -1,17 +1,17 @@
 //
-//  mt19937_64.swift
+//  MT19937x64.swift
 //  swift-random
 //
 //  Created by Vitali Kurlovich on 11.08.25.
 //
 
 @usableFromInline
-struct mt19937_64: Equatable {
+struct MT19937x64: Equatable {
     private var mt: ContiguousArray<UInt64>
     private var mti: Int
 }
 
-extension mt19937_64 {
+extension MT19937x64 {
     @inline(__always)
     init(seed: UInt64 = 5489) {
         var mt = ContiguousArray(repeating: UInt64(0), count: .NN)
@@ -64,13 +64,13 @@ extension mt19937_64 {
 
 @available(macOS 26.0, iOS 26.0, watchOS 26.0, tvOS 26.0, *)
 @usableFromInline
-struct fast_mt19937_64 {
+struct InlineMT19937x64 {
     private var mt: InlineArray<312, UInt64>
     private var mti: Int
 }
 
 @available(macOS 26.0, iOS 26.0, watchOS 26.0, tvOS 26.0, *)
-extension fast_mt19937_64 {
+extension InlineMT19937x64 {
     @inline(__always)
     init(seed: UInt64 = 5489) {
         var mt: InlineArray<312, UInt64> = .init(repeating: 0)

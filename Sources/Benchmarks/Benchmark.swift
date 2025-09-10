@@ -41,15 +41,6 @@ private extension Benchmark {
             context.blackHole(UInt64.random(in: UInt64.min ... UInt64.max, using: &generator))
         }
 
-        benchmark.benchmark(name: String(describing: Ranlux48RandomGenegator.self)) { context in
-            var generator = Ranlux48RandomGenegator()
-            for _ in 0 ..< 10_000_000 {
-                _ = UInt64.random(in: UInt64.min ... UInt64.max, using: &generator)
-            }
-
-            context.blackHole(UInt64.random(in: UInt64.min ... UInt64.max, using: &generator))
-        }
-
         benchmark.benchmark(name: String(describing: MT19937RandomGenegator.self)) { context in
             var generator = MT19937RandomGenegator()
             for _ in 0 ..< 10_000_000 {
@@ -60,8 +51,8 @@ private extension Benchmark {
         }
 
         if #available(macOS 26.0, *) {
-            benchmark.benchmark(name: String(describing: FastMT19937RandomGenegator.self)) { context in
-                var generator = FastMT19937RandomGenegator()
+            benchmark.benchmark(name: String(describing: InlineMT19937RandomGenegator.self)) { context in
+                var generator = InlineMT19937RandomGenegator()
                 for _ in 0 ..< 10_000_000 {
                     _ = UInt64.random(in: UInt64.min ... UInt64.max, using: &generator)
                 }
@@ -122,8 +113,8 @@ private extension Benchmark {
         }
 
         if #available(macOS 26.0, *) {
-            benchmark.benchmark(name: "InlineArray FastMT19937 (10)") { context in
-                var generator = FastMT19937RandomGenegator()
+            benchmark.benchmark(name: "InlineArray InlineMT19937 (10)") { context in
+                var generator = InlineMT19937RandomGenegator()
 
                 var array: InlineArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
@@ -134,8 +125,8 @@ private extension Benchmark {
                 context.blackHole(array[0])
             }
 
-            benchmark.benchmark(name: "InlineArray FastMT19937 (100)") { context in
-                var generator = FastMT19937RandomGenegator()
+            benchmark.benchmark(name: "InlineArray InlineMT19937 (100)") { context in
+                var generator = InlineMT19937RandomGenegator()
 
                 var array: InlineArray = [
                     1, 2, 3, 4, 5, 6, 7, 8, 9, 10,

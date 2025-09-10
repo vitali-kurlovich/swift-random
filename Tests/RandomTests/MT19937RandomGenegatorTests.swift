@@ -347,12 +347,12 @@ func MT19937_UUID() {
 }
 
 @available(macOS 26.0, iOS 26.0, watchOS 26.0, tvOS 26.0, *)
-@Test("FastMT19937")
-func FastMT19937() {
+@Test
+func InlineMT19937() {
     let uuid = UUID()
 
     var generator = MT19937RandomGenegator(uuid: uuid)
-    var fast_generator = FastMT19937RandomGenegator(uuid: uuid)
+    var fast_generator = InlineMT19937RandomGenegator(uuid: uuid)
 
     for _ in 0 ..< 10000 {
         #expect(generator.next() == fast_generator.next())

@@ -1,5 +1,5 @@
 //
-//  mt19937_64_Test.swift
+//  MT19937x64_Tests.swift
 //  swift-random
 //
 //  Created by Vitali Kurlovich on 13.08.25.
@@ -10,7 +10,7 @@ import Testing
 
 @Test("mt19937_64 seed 0")
 func mt19937_64_seed_0() {
-    var generator = mt19937_64(seed: 0)
+    var generator = MT19937x64(seed: 0)
 
     let result = (0 ..< 1000).map { _ in
         generator.random()
@@ -125,7 +125,7 @@ func mt19937_64_seed_0() {
 // 0x203e000e1dda79a0
 @Test("mt19937_64 seed 0x203e000e1dda79a0")
 func mt19937_64_seed_0x203e000e1dda79a0() {
-    var generator = mt19937_64(seed: 0x203E_000E_1DDA_79A0)
+    var generator = MT19937x64(seed: 0x203E_000E_1DDA_79A0)
 
     let result = (0 ..< 1000).map { _ in
         generator.random()

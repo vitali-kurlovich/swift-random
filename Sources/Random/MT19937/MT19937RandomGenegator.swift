@@ -8,11 +8,7 @@
 import struct Foundation.UUID
 
 public struct MT19937RandomGenegator: RandomNumberGenerator {
-    @usableFromInline var state: mt19937_64
-
-    public init(seed: UInt64) {
-        state = .init(seed: seed)
-    }
+    @usableFromInline var state: MT19937x64
 
     @inlinable
     public mutating func next() -> UInt64 {
@@ -21,18 +17,18 @@ public struct MT19937RandomGenegator: RandomNumberGenerator {
 }
 
 public extension MT19937RandomGenegator {
-    init(uuid: UUID = UUID()) {
+    init(seed: UInt64) {
+        self.init(state: .init(seed: seed))
+    }
+
+    @inlinable init(uuid: UUID = UUID()) {
         self.init(seed: uuid.seed)
     }
 }
 
 @available(macOS 26.0, iOS 26.0, watchOS 26.0, tvOS 26.0, *)
-public struct FastMT19937RandomGenegator: RandomNumberGenerator {
-    @usableFromInline var state: fast_mt19937_64
-
-    public init(seed: UInt64) {
-        state = .init(seed: seed)
-    }
+public struct InlineMT19937RandomGenegator: RandomNumberGenerator {
+    @usableFromInline var state: InlineMT19937x64
 
     @inlinable
     public mutating func next() -> UInt64 {
@@ -41,8 +37,12 @@ public struct FastMT19937RandomGenegator: RandomNumberGenerator {
 }
 
 @available(macOS 26.0, iOS 26.0, watchOS 26.0, tvOS 26.0, *)
-public extension FastMT19937RandomGenegator {
-    init(uuid: UUID = UUID()) {
+public extension InlineMT19937RandomGenegator {
+    init(seed: UInt64) {
+        self.init(state: .init(seed: seed))
+    }
+
+    @inlinable init(uuid: UUID = UUID()) {
         self.init(seed: uuid.seed)
     }
 }
