@@ -20,7 +20,7 @@ jobs:
         swift: ["6.2"]
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - uses: SwiftyLab/setup-swift@latest
       with:
         swift-version: ${{ matrix.swift }}
