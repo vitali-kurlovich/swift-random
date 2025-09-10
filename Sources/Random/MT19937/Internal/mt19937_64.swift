@@ -36,23 +36,16 @@ extension mt19937_64 {
     @inline(__always)
     mutating func random() -> UInt64 {
         if mti >= .NN {
-            var i = 0
             var x: UInt64
 
-            while i < .NN - .MM {
+            for i in 0 ..< (.NN - .MM ) {
                 x = (mt[i] & .UM) | (mt[i + 1] & .LM)
                 mt[i] = mt[i + .MM] ^ (x >> 1) ^ ((x & 0x1) * .MATRIX_A)
-
-                x = (mt[i + 1] & .UM) | (mt[i + 2] & .LM)
-                mt[i + 1] = mt[i + .MM + 1] ^ (x >> 1) ^ ((x & 0x1) * .MATRIX_A)
-
-                i += 2
             }
 
-            while i < .NN - 1 {
+            for i in (.NN - .MM ) ..< (.NN - 1) {
                 x = (mt[i] & .UM) | (mt[i + 1] & .LM)
                 mt[i] = mt[i + (.MM - .NN)] ^ (x >> 1) ^ ((x & 0x1) * .MATRIX_A)
-                i += 1
             }
 
             x = (mt[.NN - 1] & .UM) | (mt[0] & .LM)
