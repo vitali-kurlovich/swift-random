@@ -17,10 +17,10 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest]
-        swift: ["6.1", "6.2"]
+        swift: ["6.2"]
     
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - uses: SwiftyLab/setup-swift@latest
       with:
         swift-version: ${{ matrix.swift }}
