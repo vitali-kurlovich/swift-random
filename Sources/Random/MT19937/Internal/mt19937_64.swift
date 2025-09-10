@@ -7,29 +7,25 @@
 
 @usableFromInline
 struct mt19937_64: Equatable {
-    private var mt: ContiguousArray<UInt64> = .init(repeating: UInt64(0), count: .NN)
-    private var mti: Int = 0
+    private var mt: ContiguousArray<UInt64>
+    private var mti: Int
 }
 
 extension mt19937_64 {
     @inline(__always)
     init(seed: UInt64 = 5489) {
         var mt = ContiguousArray(repeating: UInt64(0), count: .NN)
-        var mti = 1
-
         mt[0] = seed
 
-        while mti < .NN {
+        for mti in 1 ..< .NN {
             mt[mti] = (mt[mti - 1] ^ (mt[mti - 1] >> 62))
                 .multipliedReportingOverflow(by: 6_364_136_223_846_793_005)
                 .partialValue
                 .addingReportingOverflow(UInt64(mti))
                 .partialValue
-
-            mti += 1
         }
 
-        self.init(mt: mt, mti: mti)
+        self.init(mt: mt, mti: .NN)
     }
 
     @usableFromInline
@@ -72,8 +68,8 @@ extension mt19937_64 {
     @available(macOS 26.0, *)
     @usableFromInline
     struct fast_mt19937_64 {
-        private var mt: InlineArray<312, UInt64> = .init(repeating: 0)
-        private var mti: Int = 0
+        private var mt: InlineArray<312, UInt64>
+        private var mti: Int
     }
 
     @available(iOS 26.0, *)
@@ -82,21 +78,17 @@ extension mt19937_64 {
         @inline(__always)
         init(seed: UInt64 = 5489) {
             var mt: InlineArray<312, UInt64> = .init(repeating: 0)
-            var mti = 1
-
             mt[0] = seed
 
-            while mti < .NN {
+            for mti in 1 ..< .NN {
                 mt[mti] = (mt[mti - 1] ^ (mt[mti - 1] >> 62))
                     .multipliedReportingOverflow(by: 6_364_136_223_846_793_005)
                     .partialValue
                     .addingReportingOverflow(UInt64(mti))
                     .partialValue
-
-                mti += 1
             }
 
-            self.init(mt: mt, mti: mti)
+            self.init(mt: mt, mti: .NN)
         }
 
         @usableFromInline
