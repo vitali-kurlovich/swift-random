@@ -41,23 +41,18 @@ public extension Array {
     }
 }
 
-#if swift(>=6.2)
-
-    @available(iOS 26.0, *)
-    @available(macOS 26.0, *)
-    public extension InlineArray {
-        @inlinable mutating func shuffle<T>(algorithm: ShuffleAlgorithm = .default, using generator: inout T) where T: RandomNumberGenerator {
-            switch algorithm {
-            case .default:
-                fisherYatesShuffle(using: &generator)
-            }
-        }
-
-        @inlinable func shuffled<T>(algorithm: ShuffleAlgorithm = .default, using generator: inout T) -> Self where T: RandomNumberGenerator {
-            var array = self
-            array.shuffle(algorithm: algorithm, using: &generator)
-            return array
+@available(macOS 26.0, iOS 26.0, watchOS 26.0, tvOS 26.0, *)
+public extension InlineArray {
+    @inlinable mutating func shuffle<T>(algorithm: ShuffleAlgorithm = .default, using generator: inout T) where T: RandomNumberGenerator {
+        switch algorithm {
+        case .default:
+            fisherYatesShuffle(using: &generator)
         }
     }
 
-#endif // swift(>=6.2)
+    @inlinable func shuffled<T>(algorithm: ShuffleAlgorithm = .default, using generator: inout T) -> Self where T: RandomNumberGenerator {
+        var array = self
+        array.shuffle(algorithm: algorithm, using: &generator)
+        return array
+    }
+}

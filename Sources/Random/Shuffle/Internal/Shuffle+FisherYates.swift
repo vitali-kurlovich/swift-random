@@ -33,27 +33,22 @@ extension Sequence {
     }
 }
 
-#if swift(>=6.2)
+@available(macOS 26.0, iOS 26.0, watchOS 26.0, tvOS 26.0, *)
+extension InlineArray {
+    @inlinable
+    mutating func fisherYatesShuffle<T>(using generator: inout T) where T: RandomNumberGenerator {
+        let count = self.count
 
-    @available(iOS 26.0, *)
-    @available(macOS 26.0, *)
-    extension InlineArray {
-        @inlinable
-        mutating func fisherYatesShuffle<T>(using generator: inout T) where T: RandomNumberGenerator {
-            let count = self.count
+        guard count > 1 else {
+            return
+        }
 
-            guard count > 1 else {
-                return
-            }
+        let indexes = startIndex ... index(before: index(before: endIndex))
 
-            let indexes = startIndex ... index(before: index(before: endIndex))
-
-            for i in indexes {
-                let rndIndexes = i ... index(before: endIndex)
-                let j = rndIndexes.randomElement(using: &generator)!
-                swapAt(i, j)
-            }
+        for i in indexes {
+            let rndIndexes = i ... index(before: endIndex)
+            let j = rndIndexes.randomElement(using: &generator)!
+            swapAt(i, j)
         }
     }
-
-#endif // swift(>=6.2)
+}

@@ -346,20 +346,15 @@ func MT19937_UUID() {
     #expect(result == expected)
 }
 
-#if swift(>=6.2)
+@available(macOS 26.0, iOS 26.0, watchOS 26.0, tvOS 26.0, *)
+@Test("FastMT19937")
+func FastMT19937() {
+    let uuid = UUID()
 
-    @available(iOS 26.0, *)
-    @available(macOS 26.0, *)
-    @Test("FastMT19937")
-    func FastMT19937() {
-        let uuid = UUID()
+    var generator = MT19937RandomGenegator(uuid: uuid)
+    var fast_generator = FastMT19937RandomGenegator(uuid: uuid)
 
-        var generator = MT19937RandomGenegator(uuid: uuid)
-        var fast_generator = FastMT19937RandomGenegator(uuid: uuid)
-
-        for _ in 0 ..< 10000 {
-            #expect(generator.next() == fast_generator.next())
-        }
+    for _ in 0 ..< 10000 {
+        #expect(generator.next() == fast_generator.next())
     }
-
-#endif // swift(>=6.2)
+}
