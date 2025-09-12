@@ -9,7 +9,11 @@ public enum ShuffleAlgorithm {
     /// Fisher Yates Shuffle
     /// - Complexity: O(*n*), where *n* is the length of the sequence
     case `default`
+
+    case faro
 }
+
+public struct FaroShuffleConfiguration {}
 
 public extension Sequence {
     /// Returns the elements of the sequence, shuffled using the shuffling algorithm and  the given generator
@@ -27,6 +31,8 @@ public extension Sequence {
         switch algorithm {
         case .default:
             return fisherYatesShuffled(using: &generator)
+        case .faro:
+            return faroShuffled(using: &generator)
         }
     }
 }
@@ -37,6 +43,8 @@ public extension Array {
         switch algorithm {
         case .default:
             fisherYatesShuffle(using: &generator)
+        case .faro:
+            faroShuffle(using: &generator)
         }
     }
 }
@@ -47,6 +55,8 @@ public extension InlineArray {
         switch algorithm {
         case .default:
             fisherYatesShuffle(using: &generator)
+        case .faro:
+            fatalError("Must be impemented")
         }
     }
 
