@@ -15,14 +15,15 @@ func shuffleEmpty() {
     array.shuffle(algorithm: .default, using: &generator)
     #expect(array == [])
 
-    array.shuffle(algorithm: .faro, using: &generator)
+    let configuration = FaroShuffleConfiguration(type: .in, count: 1)
+    array.shuffle(algorithm: .faro(configuration), using: &generator)
     #expect(array == [])
 
     #expect([Int]().shuffled(algorithm: .default, using: &generator) == [])
     #expect(EmptyCollection<Int>().shuffled(algorithm: .default, using: &generator) == [])
 
-    #expect([Int]().shuffled(algorithm: .faro, using: &generator) == [])
-    #expect(EmptyCollection<Int>().shuffled(algorithm: .faro, using: &generator) == [])
+    #expect([Int]().shuffled(algorithm: .faro(configuration), using: &generator) == [])
+    #expect(EmptyCollection<Int>().shuffled(algorithm: .faro(configuration), using: &generator) == [])
 }
 
 @Test("Shuffle One")
@@ -31,11 +32,13 @@ func shuffleOne() {
     var array = [12]
     array.shuffle(algorithm: .default, using: &generator)
     #expect(array == [12])
-    array.shuffle(algorithm: .faro, using: &generator)
+
+    let configuration = FaroShuffleConfiguration(type: .in, count: 1)
+    array.shuffle(algorithm: .faro(configuration), using: &generator)
     #expect(array == [12])
 
     #expect(CollectionOfOne(12).shuffled(algorithm: .default, using: &generator) == [12])
-    #expect(CollectionOfOne(12).shuffled(algorithm: .faro, using: &generator) == [12])
+    #expect(CollectionOfOne(12).shuffled(algorithm: .faro(configuration), using: &generator) == [12])
 }
 
 @Test("Shuffle (Fisher Yates)")
@@ -50,24 +53,48 @@ func shuffleArrayFisherYates() {
     #expect([1, 2, 3, 4, 5].shuffled(algorithm: .default, using: &generator) == [5, 2, 1, 3, 4])
 }
 
-@Test("Shuffle (faro)")
-func shuffleArrayFaro() {
+@Test("In-Shuffle (faro)")
+func shuffleArrayFaroIn() {
+    let configuration = FaroShuffleConfiguration(type: .in, count: 1)
+
     var array: [Int] = [1, 2, 3, 4, 5, 6]
     var generator = MT19937RandomGenegator(seed: 1234)
-    array.shuffle(algorithm: .faro, using: &generator)
+    array.shuffle(algorithm: .faro(configuration), using: &generator)
 
     #expect(array == [1, 4, 2, 5, 3, 6])
 
     generator = MT19937RandomGenegator(seed: 1234)
-    #expect([1, 2, 3, 4, 5, 6].shuffled(algorithm: .faro, using: &generator) == [1, 4, 2, 5, 3, 6])
+    #expect([1, 2, 3, 4, 5, 6].shuffled(algorithm: .faro(configuration), using: &generator) == [1, 4, 2, 5, 3, 6])
 
     generator = MT19937RandomGenegator(seed: 1234)
     array = [1, 2, 3, 4, 5]
-    array.shuffle(algorithm: .faro, using: &generator)
+    array.shuffle(algorithm: .faro(configuration), using: &generator)
     #expect(array == [1, 3, 2, 4, 5])
 
     generator = MT19937RandomGenegator(seed: 1234)
-    #expect([1, 2, 3, 4, 5].shuffled(algorithm: .faro, using: &generator) == [1, 3, 2, 4, 5])
+    #expect([1, 2, 3, 4, 5].shuffled(algorithm: .faro(configuration), using: &generator) == [1, 3, 2, 4, 5])
+}
+
+@Test("Out-Shuffle (faro)")
+func shuffleArrayFaroOut() {
+    let configuration = FaroShuffleConfiguration(type: .out, count: 1)
+
+    var array: [Int] = [1, 2, 3, 4, 5, 6]
+    var generator = MT19937RandomGenegator(seed: 1234)
+    array.shuffle(algorithm: .faro(configuration), using: &generator)
+
+    #expect(array == [4, 1, 5, 2, 6, 3])
+
+    generator = MT19937RandomGenegator(seed: 1234)
+    #expect([1, 2, 3, 4, 5, 6].shuffled(algorithm: .faro(configuration), using: &generator) == [4, 1, 5, 2, 6, 3])
+
+    generator = MT19937RandomGenegator(seed: 1234)
+    array = [1, 2, 3, 4, 5]
+    array.shuffle(algorithm: .faro(configuration), using: &generator)
+    #expect(array == [3, 1, 4, 2, 5])
+
+    generator = MT19937RandomGenegator(seed: 1234)
+    #expect([1, 2, 3, 4, 5].shuffled(algorithm: .faro(configuration), using: &generator) == [3, 1, 4, 2, 5])
 }
 
 @available(macOS 26.0, iOS 26.0, watchOS 26.0, tvOS 26.0, *)

@@ -10,10 +10,24 @@ public enum ShuffleAlgorithm {
     /// - Complexity: O(*n*), where *n* is the length of the sequence
     case `default`
 
-    case faro
+    case faro(FaroShuffleConfiguration)
 }
 
-public struct FaroShuffleConfiguration {}
+public struct FaroShuffleConfiguration: Hashable, Sendable {
+    public enum ShuffleType: Sendable {
+        case `in`
+        case out
+    }
+
+    public var type: ShuffleType
+    public var count: Int
+
+    public init(type: ShuffleType = .in, count: Int = 1) {
+        assert(count > 0)
+        self.type = type
+        self.count = count
+    }
+}
 
 public extension Sequence {
     /// Returns the elements of the sequence, shuffled using the shuffling algorithm and  the given generator
@@ -31,8 +45,8 @@ public extension Sequence {
         switch algorithm {
         case .default:
             return fisherYatesShuffled(using: &generator)
-        case .faro:
-            return faroShuffled(using: &generator)
+        case let .faro(configuration):
+            return faroShuffled(configuration: configuration, using: &generator)
         }
     }
 }
@@ -43,8 +57,8 @@ public extension Array {
         switch algorithm {
         case .default:
             fisherYatesShuffle(using: &generator)
-        case .faro:
-            faroShuffle(using: &generator)
+        case let .faro(configuration):
+            faroShuffle(configuration: configuration, using: &generator)
         }
     }
 }
@@ -56,7 +70,7 @@ public extension InlineArray {
         case .default:
             fisherYatesShuffle(using: &generator)
         case .faro:
-            fatalError("Must be impemented")
+            faroShuffle(using: &generator)
         }
     }
 
