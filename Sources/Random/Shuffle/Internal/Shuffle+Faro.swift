@@ -7,29 +7,37 @@
 
 extension Array {
     @inlinable
-    mutating func faroShuffle<T>(configuration: FaroShuffleConfiguration, using _: inout T) where T: RandomNumberGenerator {
+    mutating func faroShuffle<T>(configuration: FaroShuffleConfiguration, using generator: inout T) where T: RandomNumberGenerator {
         let count = self.count
 
         guard count > 1 else {
             return
         }
 
+        var boolGenerator = BitRandomGenerator(generator)
+
         for _ in 0 ..< configuration.count {
             let copy = self
 
-            let midIndex = (startIndex + endIndex) / 2
+            let isInShuffle = boolGenerator.next()
 
-            var leftRange = startIndex ..< midIndex
-            var rightRange = midIndex ..< endIndex
+            var midIndex = (startIndex + endIndex) / 2
+
+            if isInShuffle && 2 * midIndex - startIndex != endIndex {
+                midIndex += 1
+            }
+
+            var leftIndex = startIndex
+            var rightIndex = midIndex
 
             var finish = false
 
             var indexIterator = indices.makeIterator()
 
             func applyLeft() {
-                if !leftRange.isEmpty {
-                    let range = leftRange.lowerBound ..< Swift.min(leftRange.lowerBound + 1, leftRange.upperBound)
-                    leftRange = range.upperBound ..< leftRange.upperBound
+                if leftIndex < midIndex {
+                    let range = leftIndex ..< Swift.min(leftIndex + 1, midIndex)
+                    leftIndex = range.upperBound
 
                     for index in range {
                         let dstIndex = indexIterator.next()!
@@ -39,9 +47,9 @@ extension Array {
             }
 
             func applyRight() {
-                if !rightRange.isEmpty {
-                    let range = rightRange.lowerBound ..< Swift.min(rightRange.lowerBound + 1, rightRange.upperBound)
-                    rightRange = range.upperBound ..< rightRange.upperBound
+                if rightIndex < endIndex {
+                    let range = rightIndex ..< Swift.min(rightIndex + 1, endIndex)
+                    rightIndex = range.upperBound
 
                     for index in range {
                         let dstIndex = indexIterator.next()!
@@ -50,18 +58,19 @@ extension Array {
                 }
             }
 
-            switch configuration.type {
-            case .in:
+            if isInShuffle {
+                // In-Shuffle
                 while !finish {
                     applyLeft()
                     applyRight()
-                    finish = leftRange.isEmpty && rightRange.isEmpty
+                    finish = leftIndex == midIndex && rightIndex == endIndex
                 }
-            case .out:
+            } else {
+                // Out-Shuffle
                 while !finish {
                     applyRight()
                     applyLeft()
-                    finish = leftRange.isEmpty && rightRange.isEmpty
+                    finish = leftIndex == midIndex && rightIndex == endIndex
                 }
             }
         }

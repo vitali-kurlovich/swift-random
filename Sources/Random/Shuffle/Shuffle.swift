@@ -14,17 +14,10 @@ public enum ShuffleAlgorithm {
 }
 
 public struct FaroShuffleConfiguration: Hashable, Sendable {
-    public enum ShuffleType: Sendable {
-        case `in`
-        case out
-    }
-
-    public var type: ShuffleType
     public var count: Int
 
-    public init(type: ShuffleType = .in, count: Int = 1) {
+    public init(count: Int = 1) {
         assert(count > 0)
-        self.type = type
         self.count = count
     }
 }
