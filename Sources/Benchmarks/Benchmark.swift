@@ -82,7 +82,7 @@ private extension Benchmark {
 
             var array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-            for _ in 0 ..< 10_000_000 {
+            for _ in 0 ..< 1_000_000 {
                 array.shuffle(algorithm: .default, using: &generator)
             }
 
@@ -96,7 +96,7 @@ private extension Benchmark {
 
             let configuration = FaroShuffleConfiguration(count: 10)
 
-            for _ in 0 ..< 10_000_000 {
+            for _ in 0 ..< 1_000_000 {
                 array.shuffle(algorithm: .faro(configuration), using: &generator)
             }
 
@@ -119,7 +119,7 @@ private extension Benchmark {
                 91, 92, 93, 94, 95, 96, 97, 98, 99, 100,
             ]
 
-            for _ in 0 ..< 10_000_000 {
+            for _ in 0 ..< 1_000_000 {
                 array.shuffle(algorithm: .default, using: &generator)
             }
 
@@ -144,7 +144,7 @@ private extension Benchmark {
 
             let configuration = FaroShuffleConfiguration(count: 10)
 
-            for _ in 0 ..< 10_000_000 {
+            for _ in 0 ..< 1_000_000 {
                 array.shuffle(algorithm: .faro(configuration), using: &generator)
             }
 
@@ -157,7 +157,7 @@ private extension Benchmark {
 
                 var array: InlineArray = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-                for _ in 0 ..< 10_000_000 {
+                for _ in 0 ..< 1_000_000 {
                     array.shuffle(algorithm: .default, using: &generator)
                 }
 
@@ -180,7 +180,7 @@ private extension Benchmark {
                     91, 92, 93, 94, 95, 96, 97, 98, 99, 100,
                 ]
 
-                for _ in 0 ..< 10_000_000 {
+                for _ in 0 ..< 1_000_000 {
                     array.shuffle(algorithm: .default, using: &generator)
                 }
 
