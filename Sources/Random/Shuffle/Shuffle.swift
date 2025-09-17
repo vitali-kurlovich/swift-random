@@ -15,6 +15,7 @@ public enum ShuffleAlgorithm {
 
 public struct FaroShuffleConfiguration: Hashable, Sendable {
     public var count: Int
+    public var middleShift: ClosedRange = 0 ... 0
 
     public init(count: Int = 1) {
         assert(count > 0)
