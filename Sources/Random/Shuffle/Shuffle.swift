@@ -45,8 +45,8 @@ public extension InlineArray {
         switch algorithm {
         case .default:
             fisherYatesShuffle(using: &generator)
-        case .faro:
-            faroShuffle(using: &generator)
+        case let .faro(configuration):
+            faroShuffle(configuration: configuration, using: &generator)
         }
     }
 

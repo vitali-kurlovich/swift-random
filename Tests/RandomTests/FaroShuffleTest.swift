@@ -123,7 +123,7 @@ struct FaroShuffle {
         #expect(array == [1, 5, 6, 4, 7, 2, 3])
     }
 
-    @Test("Shuffle ")
+    @Test("Shuffle")
     func shuffleArrayWithRandoms() {
         var generator = MT19937RandomGenegator(seed: 1234)
         var array = [
@@ -156,5 +156,43 @@ struct FaroShuffle {
         ]
 
         #expect(array == expected)
+    }
+
+    @available(macOS 26.0, iOS 26.0, watchOS 26.0, tvOS 26.0, *)
+    @Test("Shuffle InlineArray")
+    func shuffleInlineArrayWithRandoms() {
+        var generator = MT19937RandomGenegator(seed: 1234)
+        var array: InlineArray = [
+            1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+            11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+            21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+            31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+            41, 42, 43, 44, 45, 46, 47, 48, 49, 50,
+            51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
+            61, 62, 63, 64, 65, 66, 67, 68, 69, 70,
+            71, 72, 73, 74, 75, 76, 77, 78, 79, 80,
+            81, 82, 83, 84, 85, 86, 87, 88, 89, 90,
+            91, 92, 93, 94, 95, 96, 97, 98, 99, 100,
+        ]
+
+        let configuration = FaroShuffleConfiguration(count: 7, middleShiftRange: -10 ... 10, stuckCardsRange: 1 ... 6)
+
+        array.shuffle(algorithm: .faro(configuration), using: &generator)
+
+        let expected = [
+            6, 28, 41, 88, 76, 77, 51, 46, 78, 86, 74,
+            84, 20, 26, 29, 30, 85, 37, 40, 79, 87, 27,
+            36, 24, 50, 56, 57, 93, 75, 21, 22, 52, 5,
+            98, 99, 100, 89, 42, 31, 62, 15, 16, 1, 38,
+            39, 53, 7, 63, 47, 2, 94, 69, 66, 80, 17, 67,
+            95, 8, 96, 25, 81, 9, 58, 97, 90, 68, 3, 82,
+            23, 59, 91, 48, 32, 19, 4, 33, 34, 49, 43,
+            70, 60, 61, 35, 64, 65, 44, 45, 10, 71, 72,
+            73, 18, 83, 11, 12, 13, 14, 92, 54, 55,
+        ]
+
+        for (index, value) in expected.enumerated() {
+            #expect(array[index] == value)
+        }
     }
 }
