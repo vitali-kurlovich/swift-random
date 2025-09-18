@@ -19,12 +19,30 @@ extension Array {
         for _ in 0 ..< configuration.count {
             let copy = self
 
-            let isInShuffle = boolGenerator.next()
+            var isInShuffle = boolGenerator.next()
+
+            let offset = configuration.middleShiftRange.randomElement(using: &generator)!
 
             var midIndex = (startIndex + endIndex) / 2
 
             if isInShuffle && 2 * midIndex - startIndex != endIndex {
                 midIndex += 1
+            }
+
+            midIndex += offset
+
+            if midIndex < startIndex {
+                midIndex = startIndex
+            }
+
+            if midIndex > endIndex {
+                midIndex = endIndex
+            }
+
+            if midIndex - startIndex < endIndex - midIndex {
+                isInShuffle = false
+            } else if midIndex - startIndex > endIndex - midIndex {
+                isInShuffle = true
             }
 
             var leftIndex = startIndex
@@ -36,7 +54,9 @@ extension Array {
 
             func applyLeft() {
                 if leftIndex < midIndex {
-                    let range = leftIndex ..< Swift.min(leftIndex + 1, midIndex)
+                    let offset = configuration.stuckCardsRange.randomElement(using: &generator)!
+
+                    let range = leftIndex ..< Swift.min(leftIndex + offset, midIndex)
                     leftIndex = range.upperBound
 
                     for index in range {
@@ -48,7 +68,9 @@ extension Array {
 
             func applyRight() {
                 if rightIndex < endIndex {
-                    let range = rightIndex ..< Swift.min(rightIndex + 1, endIndex)
+                    let offset = configuration.stuckCardsRange.randomElement(using: &generator)!
+
+                    let range = rightIndex ..< Swift.min(rightIndex + offset, endIndex)
                     rightIndex = range.upperBound
 
                     for index in range {

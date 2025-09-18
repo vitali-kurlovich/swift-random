@@ -5,24 +5,6 @@
 //  Created by Vitali Kurlovich on 27.07.25.
 //
 
-public enum ShuffleAlgorithm {
-    /// Fisher Yates Shuffle
-    /// - Complexity: O(*n*), where *n* is the length of the sequence
-    case `default`
-
-    case faro(FaroShuffleConfiguration)
-}
-
-public struct FaroShuffleConfiguration: Hashable, Sendable {
-    public var count: Int
-    public var middleShift: ClosedRange = 0 ... 0
-
-    public init(count: Int = 1) {
-        assert(count > 0)
-        self.count = count
-    }
-}
-
 public extension Sequence {
     /// Returns the elements of the sequence, shuffled using the shuffling algorithm and  the given generator
     /// as a source for randomness.
