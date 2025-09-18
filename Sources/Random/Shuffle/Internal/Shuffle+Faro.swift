@@ -21,14 +21,13 @@ extension Array {
 
             var isInShuffle = boolGenerator.next()
 
-            let offset = configuration.middleShiftRange.randomElement(using: &generator)!
-
             var midIndex = (startIndex + endIndex) / 2
 
             if isInShuffle && 2 * midIndex - startIndex != endIndex {
                 midIndex += 1
             }
 
+            let offset = configuration.middleShiftRange.randomElement(using: &generator)!
             midIndex += offset
 
             if midIndex < startIndex {
