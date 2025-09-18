@@ -108,7 +108,7 @@ private extension Benchmark {
 
             var array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-            let configuration = FaroShuffleConfiguration(count: 10)
+            let configuration = FaroShuffleConfiguration(count: 10, middleShiftRange: -3 ... 3, stuckCardsRange: 1 ... 3)
 
             for _ in 0 ..< 1_000_000 {
                 array.shuffle(algorithm: .faro(configuration), using: &generator)
@@ -181,7 +181,7 @@ private extension Benchmark {
                 91, 92, 93, 94, 95, 96, 97, 98, 99, 100,
             ]
 
-            let configuration = FaroShuffleConfiguration(count: 10)
+            let configuration = FaroShuffleConfiguration(count: 10, middleShiftRange: -20 ... 20, stuckCardsRange: 1 ... 5)
 
             for _ in 0 ..< 1_000_000 {
                 array.shuffle(algorithm: .faro(configuration), using: &generator)
