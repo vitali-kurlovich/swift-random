@@ -46,7 +46,7 @@ public extension InlineArray {
         guard count > 1 else {
             return
         }
-        
+
         switch algorithm {
         case .default:
             fisherYatesShuffle(using: &generator)

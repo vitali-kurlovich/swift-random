@@ -111,13 +111,8 @@ extension InlineArray {
             let offset = configuration.middleShiftRange.randomElement(using: &generator)!
             midIndex += offset
 
-            if midIndex < startIndex {
-                midIndex = startIndex
-            }
-
-            if midIndex > endIndex {
-                midIndex = endIndex
-            }
+            midIndex = Swift.max(midIndex, startIndex)
+            midIndex = Swift.min(midIndex, endIndex)
 
             if midIndex - startIndex < endIndex - midIndex {
                 isInShuffle = false
