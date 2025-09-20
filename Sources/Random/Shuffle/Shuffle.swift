@@ -18,18 +18,19 @@ public extension Sequence {
     /// - Complexity: Depends on algorithm
 
     @inlinable func shuffled<T>(algorithm: ShuffleAlgorithm = .default, using generator: inout T) -> [Element] where T: RandomNumberGenerator {
-        switch algorithm {
-        case .default:
-            return fisherYatesShuffled(using: &generator)
-        case let .faro(configuration):
-            return faroShuffled(configuration: configuration, using: &generator)
-        }
+        var array = Array(self)
+        array.shuffle(algorithm: algorithm, using: &generator)
+        return array
     }
 }
 
 public extension Array {
     /// Shuffle array using random generator and algorithm
     @inlinable mutating func shuffle<T>(algorithm: ShuffleAlgorithm = .default, using generator: inout T) where T: RandomNumberGenerator {
+        guard count > 1 else {
+            return
+        }
+
         switch algorithm {
         case .default:
             fisherYatesShuffle(using: &generator)
@@ -42,6 +43,10 @@ public extension Array {
 @available(macOS 26.0, iOS 26.0, watchOS 26.0, tvOS 26.0, *)
 public extension InlineArray {
     @inlinable mutating func shuffle<T>(algorithm: ShuffleAlgorithm = .default, using generator: inout T) where T: RandomNumberGenerator {
+        guard count > 1 else {
+            return
+        }
+        
         switch algorithm {
         case .default:
             fisherYatesShuffle(using: &generator)

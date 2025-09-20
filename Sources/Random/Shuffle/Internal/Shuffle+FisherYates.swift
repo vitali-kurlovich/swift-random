@@ -8,11 +8,7 @@
 extension Array {
     @inlinable
     mutating func fisherYatesShuffle<T>(using generator: inout T) where T: RandomNumberGenerator {
-        let count = self.count
-
-        guard count > 1 else {
-            return
-        }
+        assert(count > 1)
 
         let indexes = startIndex ... index(before: index(before: endIndex))
 
@@ -24,24 +20,11 @@ extension Array {
     }
 }
 
-extension Sequence {
-    @inlinable
-    func fisherYatesShuffled<T>(using generator: inout T) -> [Element] where T: RandomNumberGenerator {
-        var array = Array(self)
-        array.fisherYatesShuffle(using: &generator)
-        return array
-    }
-}
-
 @available(macOS 26.0, iOS 26.0, watchOS 26.0, tvOS 26.0, *)
 extension InlineArray {
     @inlinable
     mutating func fisherYatesShuffle<T>(using generator: inout T) where T: RandomNumberGenerator {
-        let count = self.count
-
-        guard count > 1 else {
-            return
-        }
+        assert(count > 1)
 
         let indexes = startIndex ... index(before: index(before: endIndex))
 

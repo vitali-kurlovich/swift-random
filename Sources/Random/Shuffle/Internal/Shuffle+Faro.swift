@@ -8,11 +8,7 @@
 extension Array {
     @inlinable
     mutating func faroShuffle<T>(configuration: FaroShuffleConfiguration, using generator: inout T) where T: RandomNumberGenerator {
-        let count = self.count
-
-        guard count > 1 else {
-            return
-        }
+        assert(count > 1)
 
         var boolGenerator = BitRandomGenerator(generator)
 
@@ -30,13 +26,8 @@ extension Array {
             let offset = configuration.middleShiftRange.randomElement(using: &generator)!
             midIndex += offset
 
-            if midIndex < startIndex {
-                midIndex = startIndex
-            }
-
-            if midIndex > endIndex {
-                midIndex = endIndex
-            }
+            midIndex = Swift.max(midIndex, startIndex)
+            midIndex = Swift.min(midIndex, endIndex)
 
             if midIndex - startIndex < endIndex - midIndex {
                 isInShuffle = false
@@ -98,24 +89,11 @@ extension Array {
     }
 }
 
-extension Sequence {
-    @inlinable
-    func faroShuffled<T>(configuration: FaroShuffleConfiguration, using generator: inout T) -> [Element] where T: RandomNumberGenerator {
-        var array = Array(self)
-        array.faroShuffle(configuration: configuration, using: &generator)
-        return array
-    }
-}
-
 @available(macOS 26.0, iOS 26.0, watchOS 26.0, tvOS 26.0, *)
 extension InlineArray {
     @inlinable
     mutating func faroShuffle<T>(configuration: FaroShuffleConfiguration, using generator: inout T) where T: RandomNumberGenerator {
-        let count = self.count
-
-        guard count > 1 else {
-            return
-        }
+        assert(count > 1)
 
         var boolGenerator = BitRandomGenerator(generator)
 
