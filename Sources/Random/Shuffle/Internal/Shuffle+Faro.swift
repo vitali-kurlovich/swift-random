@@ -7,14 +7,12 @@
 
 extension Range where Self.Bound == Int {
     @usableFromInline
-    func faroShuffledIndices<T>(configuration: FaroShuffleConfiguration, using generator: inout T) -> [Self.Bound] where T: RandomNumberGenerator {
+    func faroShuffledIndices<T>(configuration: FaroShuffleConfiguration, using generator: inout T) -> ContiguousArray<Self.Bound> where T: RandomNumberGenerator {
         assert(count > 1)
 
         var boolGenerator = BitRandomGenerator(generator)
 
-        let src = map { $0 }
-
-        var dest = src // Array(repeating: 0, count: src.count)
+        var dest = ContiguousArray(self)
 
         for _ in 0 ..< configuration.count {
             var isInShuffle = boolGenerator.next()
@@ -25,7 +23,8 @@ extension Range where Self.Bound == Int {
                 midIndex += 1
             }
 
-            let offset = configuration.middleShiftRange.randomElement(using: &generator)!
+            let offset = Int.random(in: configuration.middleShiftRange, using: &generator)
+
             midIndex += offset
 
             midIndex = Swift.max(midIndex, startIndex)
@@ -46,7 +45,7 @@ extension Range where Self.Bound == Int {
 
             func applyLeft() {
                 if leftIndex < midIndex {
-                    let offset = configuration.stuckCardsRange.randomElement(using: &generator)!
+                    let offset = Int.random(in: configuration.stuckCardsRange, using: &generator)
 
                     let range = leftIndex ..< Swift.min(leftIndex + offset, midIndex)
                     leftIndex = range.upperBound
@@ -61,7 +60,7 @@ extension Range where Self.Bound == Int {
 
             func applyRight() {
                 if rightIndex < endIndex {
-                    let offset = configuration.stuckCardsRange.randomElement(using: &generator)!
+                    let offset = Int.random(in: configuration.stuckCardsRange, using: &generator)
 
                     let range = rightIndex ..< Swift.min(rightIndex + offset, endIndex)
                     rightIndex = range.upperBound
@@ -101,12 +100,81 @@ extension Array {
     mutating func faroShuffle<T>(configuration: FaroShuffleConfiguration, using generator: inout T) where T: RandomNumberGenerator {
         assert(count > 1)
 
-        let indexMap = indices.faroShuffledIndices(configuration: configuration, using: &generator)
+        var boolGenerator = BitRandomGenerator(generator)
 
-        let copy = self
+        for _ in 0 ..< configuration.count {
+            var isInShuffle = boolGenerator.next()
 
-        for (index, mapIndex) in indexMap.enumerated() {
-            self[index] = copy[mapIndex]
+            var midIndex = (startIndex + endIndex) / 2
+
+            if isInShuffle && 2 * midIndex - startIndex != endIndex {
+                midIndex += 1
+            }
+
+            let offset = Int.random(in: configuration.middleShiftRange, using: &generator)
+            midIndex += offset
+
+            midIndex = Swift.max(midIndex, startIndex)
+            midIndex = Swift.min(midIndex, endIndex)
+
+            if midIndex - startIndex < endIndex - midIndex {
+                isInShuffle = false
+            } else if midIndex - startIndex > endIndex - midIndex {
+                isInShuffle = true
+            }
+
+            var leftIndex = startIndex
+            var rightIndex = midIndex
+
+            var finish = false
+
+            var indexIterator = indices.makeIterator()
+
+            let copy = self
+
+            func applyLeft() {
+                if leftIndex < midIndex {
+                    let offset = Int.random(in: configuration.stuckCardsRange, using: &generator)
+
+                    let range = leftIndex ..< Swift.min(leftIndex + offset, midIndex)
+                    leftIndex = range.upperBound
+
+                    for index in range {
+                        let dstIndex = indexIterator.next()!
+                        self[dstIndex] = copy[index]
+                    }
+                }
+            }
+
+            func applyRight() {
+                if rightIndex < endIndex {
+                    let offset = Int.random(in: configuration.stuckCardsRange, using: &generator)
+
+                    let range = rightIndex ..< Swift.min(rightIndex + offset, endIndex)
+                    rightIndex = range.upperBound
+
+                    for index in range {
+                        let dstIndex = indexIterator.next()!
+                        self[dstIndex] = copy[index]
+                    }
+                }
+            }
+
+            if isInShuffle {
+                // In-Shuffle
+                while !finish {
+                    applyLeft()
+                    applyRight()
+                    finish = leftIndex == midIndex && rightIndex == endIndex
+                }
+            } else {
+                // Out-Shuffle
+                while !finish {
+                    applyRight()
+                    applyLeft()
+                    finish = leftIndex == midIndex && rightIndex == endIndex
+                }
+            }
         }
     }
 }
@@ -117,12 +185,81 @@ extension InlineArray {
     mutating func faroShuffle<T>(configuration: FaroShuffleConfiguration, using generator: inout T) where T: RandomNumberGenerator {
         assert(count > 1)
 
-        let indexMap = indices.faroShuffledIndices(configuration: configuration, using: &generator)
+        var boolGenerator = BitRandomGenerator(generator)
 
-        let copy = self
+        for _ in 0 ..< configuration.count {
+            let copy = self
 
-        for (index, mapIndex) in indexMap.enumerated() {
-            self[index] = copy[mapIndex]
+            var isInShuffle = boolGenerator.next()
+
+            var midIndex = (startIndex + endIndex) / 2
+
+            if isInShuffle && 2 * midIndex - startIndex != endIndex {
+                midIndex += 1
+            }
+
+            let offset = Int.random(in: configuration.middleShiftRange, using: &generator)
+            midIndex += offset
+
+            midIndex = Swift.max(midIndex, startIndex)
+            midIndex = Swift.min(midIndex, endIndex)
+
+            if midIndex - startIndex < endIndex - midIndex {
+                isInShuffle = false
+            } else if midIndex - startIndex > endIndex - midIndex {
+                isInShuffle = true
+            }
+
+            var leftIndex = startIndex
+            var rightIndex = midIndex
+
+            var finish = false
+
+            var indexIterator = indices.makeIterator()
+
+            func applyLeft() {
+                if leftIndex < midIndex {
+                    let offset = Int.random(in: configuration.stuckCardsRange, using: &generator)
+
+                    let range = leftIndex ..< Swift.min(leftIndex + offset, midIndex)
+                    leftIndex = range.upperBound
+
+                    for index in range {
+                        let dstIndex = indexIterator.next()!
+                        self[dstIndex] = copy[index]
+                    }
+                }
+            }
+
+            func applyRight() {
+                if rightIndex < endIndex {
+                    let offset = Int.random(in: configuration.stuckCardsRange, using: &generator)
+
+                    let range = rightIndex ..< Swift.min(rightIndex + offset, endIndex)
+                    rightIndex = range.upperBound
+
+                    for index in range {
+                        let dstIndex = indexIterator.next()!
+                        self[dstIndex] = copy[index]
+                    }
+                }
+            }
+
+            if isInShuffle {
+                // In-Shuffle
+                while !finish {
+                    applyLeft()
+                    applyRight()
+                    finish = leftIndex == midIndex && rightIndex == endIndex
+                }
+            } else {
+                // Out-Shuffle
+                while !finish {
+                    applyRight()
+                    applyLeft()
+                    finish = leftIndex == midIndex && rightIndex == endIndex
+                }
+            }
         }
     }
 }
