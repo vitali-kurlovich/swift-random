@@ -5,6 +5,8 @@
 //  Created by Vitali Kurlovich on 7.11.25.
 //
 
+import Charts
+import Random
 import SwiftUI
 
 struct ContentView: View {
@@ -19,6 +21,54 @@ struct ContentView: View {
     }
 }
 
+struct ColorBar: View, Equatable {
+    let width: CGFloat
+    let color: Color
+    var body: some View {
+        color.frame(width: width)
+    }
+}
+
+struct Bar<ID: Hashable>: View {
+    let id: ID
+    let width: CGFloat
+    let color: (ID) -> Color
+
+    var body: some View {
+        ColorBar(
+            width: width,
+            color: color(id)
+        ).equatable()
+    }
+}
+
+struct BarItem: Identifiable {
+    let id: Int
+}
+
+extension BarItem {
+    static func fill(_ range: Range<Int>) -> [Self] {
+        range.map { .init(id: $0) }
+    }
+}
+
+struct FaroShuffleBars: View {
+    let model: FaroShuffleBarsModel
+
+    let barWidth: CGFloat = 6
+
+    var body: some View {
+        HStack(spacing: 1) {
+            ForEach(model.items) { item in
+                Bar(id: item.id, width: barWidth) { id in
+                    Color(hue: Double(id) / Double(model.itemsCount), saturation: 1, brightness: 1)
+                }
+            }
+        }
+    }
+}
+
 #Preview {
-    ContentView()
+    // FaroShuffleBars(model: .init())
+    FaroShuffleConfigurationView(model: .init())
 }

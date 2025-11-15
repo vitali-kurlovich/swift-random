@@ -306,5 +306,3 @@ private extension Benchmark {
         benchmark.start()
     }
 }
-
-

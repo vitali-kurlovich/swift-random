@@ -5,7 +5,6 @@
 //  Created by Vitali Kurlovich on 18.09.25.
 //
 
-
 public enum ShuffleAlgorithm {
     /// Fisher Yates Shuffle
     /// - Complexity: O(*n*), where *n* is the length of the sequence
