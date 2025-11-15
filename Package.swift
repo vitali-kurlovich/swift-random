@@ -30,8 +30,10 @@ let package = Package(
             name: "Random",
             dependencies: [
                 .product(name: "Crypto", package: "swift-crypto"),
-            ]
+            ],
+           
         ),
+        
         .executableTarget(
             name: "RandomGeneratorBenchmarks",
 
@@ -40,7 +42,8 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 "Benchmarks",
             ],
-            path: "Sources/Benchmarks"
+            path: "Sources/Benchmarks",
+            
         ),
         .testTarget(
             name: "RandomTests",
