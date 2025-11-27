@@ -30,5 +30,9 @@ struct GeneratorSettings: View {
         Section("Random Generator") {
             GeneratorSettings(configuration: $configuration)
         }
+
+        Section("Items") {
+            FaroShuffleConfigurationView(model: .init())
+        }
     }
 }

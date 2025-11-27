@@ -72,3 +72,18 @@ struct FaroShuffleBars: View {
     // FaroShuffleBars(model: .init())
     FaroShuffleConfigurationView(model: .init())
 }
+
+struct VBars<Style: BarStyle> {
+    let count: Int
+    let style: Style
+}
+
+private extension VBars {
+    func resolveColor(index: Int) -> Color {
+        style.resolveColor(Double(index) / Double(count))
+    }
+}
+
+protocol BarStyle {
+    func resolveColor(_ offset: Double) -> Color
+}

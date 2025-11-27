@@ -10,30 +10,23 @@ import SwiftUI
 struct FaroShuffleConfigurationView: View {
     let model: FaroShuffleBarsModel
 
-    private var itemsCount: Binding<Double> {
-        .init {
-            Double(model.itemsCount)
-        } set: { value, _ in
-            model.itemsCount = Int(value)
-        }
-    }
-
     var body: some View {
-        Form {
-            Section(header: Text("Configuration")) {
-                Slider(
-                    value: itemsCount,
-                    in: 1 ... 100,
-                    step: 1
-                ) {
-                    Text("Count")
-                }
-                Text(model.itemsCount.formatted())
-            }
+        IntValueSlider("Count", in: 1 ... 100, value: itemsCount)
+    }
+}
+
+private extension FaroShuffleConfigurationView {
+    var itemsCount: Binding<Int> {
+        .init {
+            model.itemsCount
+        } set: { value, _ in
+            model.itemsCount = value
         }
     }
 }
 
 #Preview {
-    FaroShuffleConfigurationView(model: .init())
+    Form {
+        FaroShuffleConfigurationView(model: .init())
+    }
 }
