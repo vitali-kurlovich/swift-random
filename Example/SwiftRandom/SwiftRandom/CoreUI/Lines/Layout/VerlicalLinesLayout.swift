@@ -8,14 +8,24 @@
 import SwiftUI
 
 struct VerlicalLinesLayout: Layout {
-    let spacing: CGFloat
-    let barMinWidth: CGFloat?
+    let spacing: CGFloat?
+    let lineMinWidth: CGFloat?
     let alignment: HorizontalAlignment
 
-    init(spacing: CGFloat = 1, barMinWidth: CGFloat? = 1, alignment: HorizontalAlignment = .center) {
+    @Environment(\.displayScale)
+    private var displayScale: CGFloat
+
+    @Environment(\.pixelLength)
+    private var pixelLength: CGFloat
+
+    init(spacing: CGFloat? = nil, barMinWidth: CGFloat? = 1, alignment: HorizontalAlignment = .center) {
         self.spacing = spacing
-        self.barMinWidth = barMinWidth
+        lineMinWidth = barMinWidth
         self.alignment = alignment
+    }
+
+    var spacingWidth: CGFloat {
+        spacing ?? pixelLength
     }
 
     func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache _: inout ()) -> CGSize {
@@ -23,9 +33,9 @@ struct VerlicalLinesLayout: Layout {
 
         let spacingCount = max(0, count - 1)
 
-        let barMinWidth = self.barMinWidth ?? 1
+        let barMinWidth = lineMinWidth ?? 1
 
-        let minWidth = CGFloat(count) * barMinWidth + CGFloat(spacingCount) * spacing
+        let minWidth = CGFloat(count) * barMinWidth + CGFloat(spacingCount) * spacingWidth
 
         let height = proposal.height ?? 21
 
@@ -33,16 +43,16 @@ struct VerlicalLinesLayout: Layout {
     }
 
     func placeSubviews(in bounds: CGRect, proposal _: ProposedViewSize, subviews: Subviews, cache _: inout ()) {
-        let barMinWidth = self.barMinWidth ?? 1
+        let barMinWidth = lineMinWidth ?? 1
 
         let count = subviews.count
         let spacingCount = max(0, count - 1)
 
-        let fullSpacingWidth = CGFloat(spacingCount) * spacing
+        let fullSpacingWidth = CGFloat(spacingCount) * spacingWidth
 
         let fillWidth = bounds.width - fullSpacingWidth
 
-        var itemWidth = (fillWidth / CGFloat(count)).rounded(.down)
+        var itemWidth = ((fillWidth * displayScale) / CGFloat(count)).rounded(.down) / displayScale
 
         itemWidth = max(itemWidth, barMinWidth)
 
@@ -53,7 +63,7 @@ struct VerlicalLinesLayout: Layout {
 
         switch alignment {
         case .leading, .listRowSeparatorLeading:
-            let x = bounds.minX // min(bounds.minX, bounds.maxX - fullWidth)
+            let x = bounds.minX
             placePoint = CGPoint(x: x, y: y)
 
         case .trailing, .listRowSeparatorTrailing:
@@ -66,7 +76,7 @@ struct VerlicalLinesLayout: Layout {
         }
 
         let size = ProposedViewSize(width: itemWidth, height: bounds.height)
-        let step = itemWidth + spacing
+        let step = itemWidth + spacingWidth
 
         for view in subviews {
             view.place(at: placePoint, anchor: .topLeading, proposal: size)
@@ -77,7 +87,7 @@ struct VerlicalLinesLayout: Layout {
 }
 
 #Preview {
-    VerlicalLinesLayout(spacing: 1, barMinWidth: 16, alignment: .leading) {
+    VerlicalLinesLayout(spacing: nil, barMinWidth: 16, alignment: .leading) {
         ForEach(0 ..< 5
         ) { _ in
             Color.green

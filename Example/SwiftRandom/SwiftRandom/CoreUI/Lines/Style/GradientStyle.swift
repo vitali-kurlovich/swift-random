@@ -22,6 +22,7 @@ struct GradientStyle<ID: Hashable>: LineStyle, Hashable where ID: BinaryInteger 
 
     func resolveColor(for id: ID) -> Color {
         let position = Double(id) / count
+
         return gradient.color(at: position)
     }
 }

@@ -10,4 +10,11 @@ import SwiftUI
 protocol LineStyle {
     associatedtype ID
     func resolveColor(for id: ID) -> Color
+    func resolve(in environment: EnvironmentValues) -> Self
+}
+
+extension LineStyle {
+    func resolve(in _: EnvironmentValues) -> Self {
+        self
+    }
 }

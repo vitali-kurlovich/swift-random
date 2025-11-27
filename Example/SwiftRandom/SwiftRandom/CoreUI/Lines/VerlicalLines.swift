@@ -8,12 +8,12 @@
 import SwiftUI
 
 struct VerlicalLinesConfiguration: Equatable {
-    let spacing: CGFloat
+    let spacing: CGFloat?
     let lineMinWidth: CGFloat?
     let alignment: HorizontalAlignment
 
     static var `default`: Self {
-        .init(spacing: 1, lineMinWidth: 4, alignment: .center)
+        .init(spacing: nil, lineMinWidth: 4, alignment: .center)
     }
 }
 
@@ -24,10 +24,6 @@ struct VerlicalLines<
 >: View
     where Data: RandomAccessCollection, ID: Hashable, ID == Style.ID
 {
-   // @Binding
-   // private  var data: Data
-    
-    
     private let data: Data
     private let keyPath: KeyPath<Data.Element, ID>
 
@@ -35,8 +31,13 @@ struct VerlicalLines<
 
     private let style: Style
 
+    @Environment(\.self)
+    private var environment: EnvironmentValues
+
     var body: some View {
         VerlicalLinesLayout(spacing: spacing, barMinWidth: lineMinWidth, alignment: alignment) {
+            let style = self.style.resolve(in: environment)
+
             ForEach(data, id: keyPath) { item in
                 let id = item[keyPath: self.keyPath]
 
@@ -123,7 +124,7 @@ extension VerlicalLines where Style == RainbowStyle<ID> {
 }
 
 private extension VerlicalLines {
-    var spacing: CGFloat { configuration.spacing }
+    var spacing: CGFloat? { configuration.spacing }
     var lineMinWidth: CGFloat? { configuration.lineMinWidth }
     var alignment: HorizontalAlignment { configuration.alignment }
 }
@@ -131,9 +132,14 @@ private extension VerlicalLines {
 private extension VerlicalLines {
     struct Line: View, Hashable {
         let color: Color
+        let cornerRadius: CGFloat = 2
 
         var body: some View {
-            color
+            GeometryReader { proxy in
+                let size = proxy.size
+                let radius = min(size.width, size.height) / 2
+                color.cornerRadius(min(radius, cornerRadius))
+            }
         }
     }
 }
@@ -142,13 +148,15 @@ private extension VerlicalLines {
     let gradient = Gradient(colors: [.green, .red, .blue])
 
     VStack {
-        VerlicalLines(0 ..< 32)
+        VerlicalLines(0 ..< 21)
+
         VerlicalLines((0 ..< 64).shuffled())
 
         Rectangle()
             .fill(LinearGradient(gradient: gradient, startPoint: .leading, endPoint: .trailing))
             .stroke(.foreground, lineWidth: 1)
             .frame(height: 12)
+
         VerlicalLines(0 ..< 32, gradient: gradient)
 
         VerlicalLines((0 ..< 64).shuffled(), gradient: gradient)
