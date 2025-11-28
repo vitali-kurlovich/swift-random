@@ -106,19 +106,19 @@ extension VerlicalLines where Style == GradientStyle<ID> {
     }
 }
 
-extension VerlicalLines where Style == RainbowStyle<ID> {
+extension VerlicalLines where Style == GradientStyle<ID> {
     init(_ data: Data, id: KeyPath<Data.Element, ID>, configuration: VerlicalLinesConfiguration = .default) {
-        let style = RainbowStyle<ID>(count: data.count)
+        let style = GradientStyle<ID>(count: data.count)
         self.init(data, id: id, configuration: configuration, style: style)
     }
 
     init(_ data: Data, configuration: VerlicalLinesConfiguration = .default) where Data.Element: Identifiable, Data.Element.ID == ID {
-        let style = RainbowStyle<ID>(count: data.count)
+        let style = GradientStyle<ID>(count: data.count)
         self.init(data, configuration: configuration, style: style)
     }
 
     init(_ data: Data, configuration: VerlicalLinesConfiguration = .default) where Data.Element: Hashable, Data.Element == ID {
-        let style = RainbowStyle<ID>(count: data.count)
+        let style = GradientStyle<ID>(count: data.count)
         self.init(data, id: \.self, configuration: configuration, style: style)
     }
 }
@@ -153,12 +153,15 @@ private extension VerlicalLines {
         VerlicalLines((0 ..< 64).shuffled())
 
         Rectangle()
-            .fill(LinearGradient(gradient: gradient, startPoint: .leading, endPoint: .trailing))
+            .fill(LinearGradient(gradient: .systemRainbow, startPoint: .leading, endPoint: .trailing))
             .stroke(.foreground, lineWidth: 1)
             .frame(height: 12)
 
-        VerlicalLines(0 ..< 32, gradient: gradient)
+        VerlicalLines(0 ..< 32, gradient: .systemRainbow)
 
-        VerlicalLines((0 ..< 64).shuffled(), gradient: gradient)
+        VerlicalLines((0 ..< 64).shuffled(), gradient: .systemRainbow)
+
+        VerlicalLines(0 ..< 32, gradient: .systemRed)
+        VerlicalLines((0 ..< 32).shuffled(), gradient: .systemMint)
     }
 }

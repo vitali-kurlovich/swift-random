@@ -5,11 +5,10 @@
 //  Created by Vitali Kurlovich on 26.11.25.
 //
 
-import Playgrounds
 import SwiftUI
 
 extension Gradient {
-    func color(at position: CGFloat) -> Color {
+    func interpolated(at position: CGFloat) -> Color {
         var iterator = stops.makeIterator()
 
         guard var last = iterator.next() else {
@@ -55,7 +54,7 @@ extension Gradient {
 #Preview {
     let gradient = Gradient(colors: [.red, .yellow])
 
-    gradient.color(at: 0)
-    gradient.color(at: 0.5)
-    gradient.color(at: 1)
+    gradient.interpolated(at: 0)
+    gradient.interpolated(at: 0.5)
+    gradient.interpolated(at: 1)
 }
