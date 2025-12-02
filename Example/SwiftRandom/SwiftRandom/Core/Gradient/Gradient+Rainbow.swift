@@ -28,14 +28,6 @@ extension Gradient {
     }
 
     static func rainbow(count: Int) -> Self {
-        #if canImport(UIKit)
-            typealias NativeColor = UIColor
-        #endif
-
-        #if canImport(AppKit)
-            typealias NativeColor = NSColor
-        #endif
-
         let step = 1.0 / CGFloat(count)
 
         let colors = stride(from: CGFloat.zero, through: 1.0, by: step)
@@ -43,13 +35,23 @@ extension Gradient {
                 hue in
                 let normalize = hue * 0.76
 
-                let color = NativeColor { traits in
-                    if traits.userInterfaceStyle == .dark {
-                        return .init(hue: normalize, saturation: 0.96, brightness: 0.93, alpha: 1)
+                #if canImport(UIKit)
+
+                    let color = UIColor { traits in
+                        if traits.userInterfaceStyle == .dark {
+                            return .init(hue: normalize, saturation: 0.96, brightness: 0.93, alpha: 1)
+                        }
+
+                        return .init(hue: normalize, saturation: 1, brightness: 1, alpha: 1)
                     }
 
-                    return .init(hue: normalize, saturation: 1, brightness: 1, alpha: 1)
-                }
+                #endif // canImport(UIKit)
+
+                #if canImport(AppKit)
+
+                    let color = NSColor(hue: normalize, saturation: 1, brightness: 1, alpha: 1)
+
+                #endif
 
                 return Color(color)
             }

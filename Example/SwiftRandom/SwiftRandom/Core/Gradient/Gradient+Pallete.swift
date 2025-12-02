@@ -45,23 +45,32 @@ extension Gradient {
     static let systemGray: Self =
         system(with: .systemGray)
 
-    static let systemGray2: Self =
-        system(with: .systemGray2)
+    #if canImport(UIKit)
 
-    static let systemGray3: Self =
-        system(with: .systemGray3)
+        static let systemGray2: Self =
+            system(with: .systemGray2)
 
-    static let systemGray4: Self =
-        system(with: .systemGray4)
+        static let systemGray3: Self =
+            system(with: .systemGray3)
 
-    static let systemGray5: Self =
-        system(with: .systemGray5)
+        static let systemGray4: Self =
+            system(with: .systemGray4)
 
-    static let systemGray6: Self =
-        system(with: .systemGray6)
+        static let systemGray5: Self =
+            system(with: .systemGray5)
 
-    static let tint: Self =
-        system(with: .tintColor)
+        static let systemGray6: Self =
+            system(with: .systemGray6)
+
+        static let tint: Self =
+            system(with: .tintColor)
+
+    #endif // canImport(UIKit)
+
+    #if canImport(AppKit)
+        static let tint: Self =
+            system(with: .controlAccentColor)
+    #endif
 }
 
 private extension Gradient {
@@ -74,7 +83,12 @@ private extension Gradient {
     #endif
 
     private static func system(with color: NativeColor) -> Self {
-        let second = color.withProminence(.quaternary)
+        #if canImport(UIKit)
+            let second = color.withProminence(.quaternary)
+        #endif
+        #if canImport(AppKit)
+            let second = color.withAlphaComponent(0.2)
+        #endif
 
         return .init(colors: [Color(color), Color(second)])
     }
@@ -107,17 +121,17 @@ private extension Gradient {
         LinearGradient(gradient: .systemCyan, startPoint: .leading, endPoint: .trailing)
 
         LinearGradient(gradient: .systemGray, startPoint: .leading, endPoint: .trailing)
+        #if canImport(UIKit)
+            LinearGradient(gradient: .systemGray2, startPoint: .leading, endPoint: .trailing)
 
-        LinearGradient(gradient: .systemGray2, startPoint: .leading, endPoint: .trailing)
+            LinearGradient(gradient: .systemGray3, startPoint: .leading, endPoint: .trailing)
 
-        LinearGradient(gradient: .systemGray3, startPoint: .leading, endPoint: .trailing)
+            LinearGradient(gradient: .systemGray4, startPoint: .leading, endPoint: .trailing)
 
-        LinearGradient(gradient: .systemGray4, startPoint: .leading, endPoint: .trailing)
+            LinearGradient(gradient: .systemGray5, startPoint: .leading, endPoint: .trailing)
 
-        LinearGradient(gradient: .systemGray5, startPoint: .leading, endPoint: .trailing)
-
-        LinearGradient(gradient: .systemGray6, startPoint: .leading, endPoint: .trailing)
-
+            LinearGradient(gradient: .systemGray6, startPoint: .leading, endPoint: .trailing)
+        #endif // canImport(UIKit)
         LinearGradient(gradient: .tint, startPoint: .leading, endPoint: .trailing)
     }
 }

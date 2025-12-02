@@ -152,11 +152,6 @@ private extension VerlicalLines {
 
         VerlicalLines((0 ..< 64).shuffled())
 
-        Rectangle()
-            .fill(LinearGradient(gradient: .systemRainbow, startPoint: .leading, endPoint: .trailing))
-            .stroke(.foreground, lineWidth: 1)
-            .frame(height: 12)
-
         VerlicalLines(0 ..< 32, gradient: .systemRainbow)
 
         VerlicalLines((0 ..< 64).shuffled(), gradient: .systemRainbow)
