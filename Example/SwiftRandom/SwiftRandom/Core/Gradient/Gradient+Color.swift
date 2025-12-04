@@ -29,8 +29,18 @@ extension Gradient {
 
         return last.color
     }
+}
 
-    private func color(at position: CGFloat, last: Stop, next: Stop) -> Color {
+extension Gradient {
+    func containsTransparent(_ environment: EnvironmentValues) -> Bool {
+        stops.contains {
+            $0.color.resolve(in: environment).opacity < 1.0
+        }
+    }
+}
+
+private extension Gradient {
+    func color(at position: CGFloat, last: Stop, next: Stop) -> Color {
         if last.location == next.location {
             if position <= last.location {
                 return last.color

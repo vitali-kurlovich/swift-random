@@ -7,37 +7,6 @@
 
 import SwiftUI
 
-struct CapsuleView {
-    let maxCornerRadius: CGFloat?
-}
-
-struct GradientCapsule: View {
-    let gradient: Gradient
-    let maxCornerRadius: CGFloat?
-
-    var body: some View {
-        GeometryReader { proxy in
-            let size = proxy.size
-
-            let radius = min(size.width, size.height) / 2
-
-            let cornerRadius = min(maxCornerRadius ?? .infinity, radius)
-
-            LinearGradient(gradient: gradient,
-                           startPoint: .leading,
-                           endPoint: .trailing)
-                .cornerRadius(cornerRadius)
-        }
-    }
-}
-
-#Preview {
-    GradientCapsule(gradient: .systemRainbow, maxCornerRadius: 32)
-        .shadow(radius: 3, y: 3)
-        .frame(height: 33)
-        .padding()
-}
-
 struct GradientPreview: View {
     @Environment(\.isEnabled)
     private var isEnabled: Bool

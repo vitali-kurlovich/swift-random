@@ -1,5 +1,5 @@
 //
-//  CheckedView.swift
+//  Checkerboard.swift
 //  SwiftRandom
 //
 //  Created by Vitali Kurlovich on 30.11.25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CheckedView: View {
+struct Checkerboard: View {
     let itemSize: CGSize
     let center: UnitPoint
 
@@ -62,7 +62,7 @@ struct CheckedView: View {
     }
 }
 
-private extension CheckedView {
+private extension Checkerboard {
     func fill(_ context: GraphicsContext, shading: GraphicsContext.Shading, drawRect: CGRect) {
         var context = context
 
@@ -112,19 +112,23 @@ private struct CheckedResolver {
 }
 
 #Preview {
-    CheckedView(itemSize: .init(width: 20, height: 20),
-                 center: .center,
-                 first: .style(Color.blue.gradient),
-                 second: .style(Color.red.gradient))
-        .padding()
+    Group {
+        TimelineView(.animation) { context in
+            let time = context.date.timeIntervalSince1970 * 0.3
 
-    CheckedView(itemSize: .init(width: 16, height: 16), center: .topLeading,
-                 first: nil,
-                 second: .style(Color.red.gradient))
-        .padding()
+            Checkerboard(itemSize: .init(width: 20, height: 20),
+                         center: .init(x: sin(time), y: cos(time)),
+                         first: .style(Color.blue.gradient),
+                         second: .style(Color.red.gradient))
+        }
 
-    CheckedView(itemSize: .init(width: 12, height: 12), center: .bottomTrailing,
-                 first: .style(Color.blue),
-                 second: nil)
-        .padding()
+        Checkerboard(itemSize: .init(width: 16, height: 16), center: .topLeading,
+                     first: nil,
+                     second: .style(Color.red.gradient))
+
+        Checkerboard(itemSize: .init(width: 12, height: 12), center: .bottomTrailing,
+                     first: .style(Color.blue),
+                     second: nil)
+
+    }.padding(1)
 }
