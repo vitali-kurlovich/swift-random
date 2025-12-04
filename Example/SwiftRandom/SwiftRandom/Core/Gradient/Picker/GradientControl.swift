@@ -21,7 +21,6 @@ struct GradientControlStyle: ButtonStyle {
             GradientThumbnail(gradient: gradient)
                 .grayscale(isEnabled ? 0 : 0.6)
                 .opacity(isEnabled ? 1 : 0.33)
-                // .scaleEffect(configuration.isPressed ? 0.999 : 1)
                 .opacity(configuration.isPressed ? 0.88 : 1)
             if showButton {
                 Button {} label: {
@@ -37,7 +36,8 @@ struct GradientControlStyle: ButtonStyle {
         .background {
             Backgrond(gradient: gradient)
                 .clipShape(Capsule(style: .continuous))
-                .shadow(radius: isEnabled ? 2 : 1, y: isEnabled ? 2 : 1)
+                .shadow(radius: shadowRadius(configuration),
+                        y: shadowOffset(configuration))
         }
     }
 
@@ -64,6 +64,24 @@ struct GradientControlStyle: ButtonStyle {
                     .contrast(1.1)
             }
         }
+    }
+}
+
+private extension GradientControlStyle {
+    func shadowRadius(_ configuration: Configuration) -> CGFloat {
+        var radius: CGFloat = isEnabled ? 2 : 1
+        if configuration.isPressed {
+            radius = 1
+        }
+        return radius
+    }
+
+    func shadowOffset(_ configuration: Configuration) -> CGFloat {
+        var offset: CGFloat = isEnabled ? 2 : 1
+        if configuration.isPressed {
+            offset = 1
+        }
+        return offset
     }
 }
 

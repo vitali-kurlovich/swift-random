@@ -17,13 +17,18 @@ extension GradientThumbnail {
 struct GradientThumbnail: View {
     let gradient: Gradient
     let background: Backgrond.Configuration
+    let overlay: Overlay.Configuration
 
     @Environment(\.self)
     private var environment: EnvironmentValues
 
-    init(gradient: Gradient, background: Backgrond.Configuration = .default) {
+    init(gradient: Gradient,
+         background: Backgrond.Configuration = .default,
+         overlay: Overlay.Configuration = .default)
+    {
         self.gradient = gradient
         self.background = background
+        self.overlay = overlay
     }
 
     var body: some View {
