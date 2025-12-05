@@ -46,6 +46,7 @@ struct GradientThumbnail: View {
                     .padding(1)
             }
             .clipShape(Capsule(style: .continuous))
+        // .border(Color.accentColor, width: 6)
     }
 }
 

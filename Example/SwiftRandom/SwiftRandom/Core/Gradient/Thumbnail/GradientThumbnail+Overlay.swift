@@ -48,10 +48,8 @@ extension GradientThumbnail.Overlay.Configuration {
         ]),
         glareGradient: Gradient(stops: [
             .init(color: .white.opacity(0.05), location: 0.0),
-            .init(color: .white.opacity(0.1), location: 0.33),
-            .init(color: .black.opacity(0.1), location: 0.331),
-
-            // .init(color: .black, location: 1)
+            .init(color: .white.opacity(0.15), location: 0.3),
+            .init(color: .black, location: 0.33),
         ])
     )
 

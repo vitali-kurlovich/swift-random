@@ -7,81 +7,14 @@
 
 import SwiftUI
 
-struct GradientControlStyle: ButtonStyle {
-    let gradient: Gradient
-
-    @Binding
-    var showButton: Bool
-
-    @Environment(\.isEnabled)
-    private var isEnabled: Bool
-
-    func makeBody(configuration: Configuration) -> some View {
-        HStack(spacing: 1) {
-            GradientThumbnail(gradient: gradient)
-                .grayscale(isEnabled ? 0 : 0.6)
-                .opacity(isEnabled ? 1 : 0.33)
-                .opacity(configuration.isPressed ? 0.88 : 1)
-            if showButton {
-                Button {} label: {
-                    Image(systemName: "chevron.right")
-                        .rotationEffect(.degrees(90))
-                }
-                .labelStyle(.iconOnly)
-                .buttonBorderShape(.circle)
-                .buttonStyle(.glass)
-            }
-        }
-        .padding(3)
-        .background {
-            Backgrond(gradient: gradient)
-                .clipShape(Capsule(style: .continuous))
-                .shadow(radius: shadowRadius(configuration),
-                        y: shadowOffset(configuration))
-        }
+extension GradientControl {
+    enum Size {
+        case small
+        case medium
     }
 
-    struct Backgrond: View {
-        let gradient: Gradient
-        let color: Color
-
-        @Environment(\.isEnabled)
-        private var isEnabled: Bool
-
-        init(gradient: Gradient, color: Color = .white) {
-            self.gradient = gradient
-            self.color = color
-        }
-
-        var body: some View {
-            color.overlay {
-                LinearGradient(gradient: gradient,
-                               startPoint: .leading,
-                               endPoint: .trailing)
-                    .opacity(isEnabled ? 0.4 : 0.2)
-                    // .grayscale(0.5)
-                    .brightness(0.33)
-                    .contrast(1.1)
-            }
-        }
-    }
-}
-
-private extension GradientControlStyle {
-    func shadowRadius(_ configuration: Configuration) -> CGFloat {
-        var radius: CGFloat = isEnabled ? 2 : 1
-        if configuration.isPressed {
-            radius = 1
-        }
-        return radius
-    }
-
-    func shadowOffset(_ configuration: Configuration) -> CGFloat {
-        var offset: CGFloat = isEnabled ? 2 : 1
-        if configuration.isPressed {
-            offset = 1
-        }
-        return offset
+    enum Style {
+        case mini
     }
 }
 
@@ -91,27 +24,44 @@ struct GradientControl: View {
     @Binding
     var showButton: Bool
 
-    init(gradient: Gradient, showButton: Binding<Bool>) {
+    @Binding
+    var isExpanded: Bool
+
+    init(gradient: Gradient, showButton: Binding<Bool>, isExpanded: Binding<Bool>) {
         self.gradient = gradient
         _showButton = showButton
+        _isExpanded = isExpanded
     }
 
     @Environment(\.isEnabled)
     private var isEnabled: Bool
 
     var body: some View {
-        Button("") {}.buttonStyle(GradientControlStyle(gradient: gradient, showButton: $showButton))
+        Button("") {
+            withAnimation(.easeInOut(duration: 0.2)) {
+                isExpanded.toggle()
+            }
+
+        }.buttonStyle(
+            GradientControlStyle(gradient: gradient,
+                                 showButton: $showButton,
+                                 isExpanded: $isExpanded))
     }
 }
 
 extension GradientControl {
-    init(gradient: Gradient, showButton: Bool = true) {
+    init(gradient: Gradient, showButton: Bool = true, isExpanded: Bool = false) {
         let showButton: Binding<Bool> = .init {
             showButton
         } set: { _ in
         }
 
-        self.init(gradient: gradient, showButton: showButton)
+        let isExpanded: Binding<Bool> = .init {
+            isExpanded
+        } set: { _ in
+        }
+
+        self.init(gradient: gradient, showButton: showButton, isExpanded: isExpanded)
     }
 }
 
@@ -133,7 +83,7 @@ extension GradientControl {
                 LinearGradient(gradient: gradient,
                                startPoint: .leading,
                                endPoint: .trailing)
-                    .opacity(isEnabled ? 0.4 : 0.2)
+                    // .opacity(isEnabled ? 0.0 : 0.1)
                     // .grayscale(0.5)
                     .brightness(0.33)
                     .contrast(1.1)
@@ -145,27 +95,30 @@ extension GradientControl {
 #Preview {
     @Previewable @State var showButton = true
 
+    @Previewable @State var isExpanded = false
+
     Group {
-        GradientControl(gradient: .systemRainbow, showButton: $showButton)
-            .frame(height: 36)
-        GradientControl(gradient: .systemRainbow, showButton: $showButton).disabled(true)
+        GradientControl(gradient: .systemRainbow, showButton: $showButton, isExpanded: $isExpanded)
+        // .frame(height: 36)
+        GradientControl(gradient: .systemRainbow, showButton: $showButton, isExpanded: $isExpanded).disabled(true)
 
-        if showButton {
-            GradientControl(gradient: .systemRed, showButton: showButton)
-        } else {
-            GradientControl(gradient: .systemRed, showButton: showButton)
-        }
-
-        GradientControl(gradient: .systemRed).disabled(true)
+        GradientControl(gradient: .systemRed, showButton: $showButton, isExpanded: $isExpanded)
 
         Spacer()
     }
     // .frame(height: 36)
     .padding()
+    HStack {
+        Button("Toogle") {
+            withAnimation(.easeInOut.speed(2.0)) {
+                showButton.toggle()
+            }
+        }
 
-    Button("Toogle") {
-        withAnimation(.easeInOut.speed(2.0)) {
-            showButton.toggle()
+        Button("Expand") {
+            withAnimation(.easeInOut.speed(2.0)) {
+                isExpanded.toggle()
+            }
         }
     }
 }

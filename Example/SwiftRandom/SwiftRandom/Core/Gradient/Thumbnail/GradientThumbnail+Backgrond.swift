@@ -38,12 +38,14 @@ extension GradientThumbnail.Backgrond.Configuration {
     static var `default`: Self {
         .init(checkedSize: 10,
               checkedFirstColor: .gray,
-              checkedSecondColor: .white)
+              checkedSecondColor: Color(uiColor: .systemBackground))
     }
 }
 
 #Preview {
     GradientThumbnail.Backgrond()
+
+    GradientThumbnail.Backgrond().frame(height: 32)
 }
 
 private extension GradientThumbnail.Backgrond {
