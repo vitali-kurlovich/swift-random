@@ -1,13 +1,14 @@
 //
-//  GradientStyle.swift
+//  GradientColorResolver.swift
 //  SwiftRandom
 //
 //  Created by Vitali Kurlovich on 26.11.25.
 //
 
 import SwiftUI
+import SwiftUIComponents
 
-struct GradientStyle<ID: Hashable>: LineStyle, Hashable where ID: BinaryInteger {
+struct GradientColorResolver<ID: Hashable>: LineColorResolver, Hashable where ID: BinaryInteger {
     let range: ClosedRange<ID>
     let gradient: Gradient
 
@@ -28,7 +29,7 @@ struct GradientStyle<ID: Hashable>: LineStyle, Hashable where ID: BinaryInteger 
     }
 }
 
-extension GradientStyle {
+extension GradientColorResolver {
     init(count: Int) {
         self.init(range: 0 ... ID(count - 1))
     }
@@ -40,7 +41,7 @@ extension GradientStyle {
 }
 
 #Preview {
-    let style = GradientStyle(.init(colors: [.red, .yellow, .green, .blue]), range: 2 ... 5)
+    let style = GradientColorResolver(.init(colors: [.red, .yellow, .green, .blue]), range: 2 ... 5)
 
     style.resolveColor(for: 2)
     style.resolveColor(for: 3)
@@ -49,7 +50,7 @@ extension GradientStyle {
 }
 
 #Preview {
-    let style = GradientStyle(range: 2 ... 15)
+    let style = GradientColorResolver(range: 2 ... 15)
 
     style.resolveColor(for: 2)
     style.resolveColor(for: 3)

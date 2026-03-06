@@ -17,3 +17,14 @@ extension EnvironmentValues {
         set { self[ExpandedEnvironmentKey.self] = newValue }
     }
 }
+
+private struct PressedEnvironmentKey: EnvironmentKey {
+    static let defaultValue: Bool = false
+}
+
+extension EnvironmentValues {
+    var isPressed: Bool {
+        get { self[PressedEnvironmentKey.self] }
+        set { self[PressedEnvironmentKey.self] = newValue }
+    }
+}

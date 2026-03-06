@@ -55,7 +55,3 @@ extension GradientThumbnail.Overlay.Configuration {
 
     static let none: Self = .init(shadowGradient: nil, glareGradient: nil)
 }
-
-// #Preview {
-//
-// }

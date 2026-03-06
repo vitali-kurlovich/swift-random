@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUIComponents
 
 extension GradientControlStyle {
     struct Chevron: View {
@@ -90,7 +91,7 @@ struct GradientControlStyle: ButtonStyle {
         private var isEnabled: Bool
 
         init(gradient: Gradient,
-             color: Color = Color(uiColor: .secondarySystemBackground))
+             color: Color = .primary)
         {
             self.gradient = gradient
             self.color = color

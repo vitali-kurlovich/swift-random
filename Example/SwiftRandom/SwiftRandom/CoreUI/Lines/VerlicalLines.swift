@@ -1,11 +1,9 @@
 //
-//  VerlicalLines.swift
-//  SwiftRandom
-//
 //  Created by Vitali Kurlovich on 26.11.25.
 //
 
 import SwiftUI
+import SwiftUIComponents
 
 struct VerlicalLinesConfiguration: Equatable {
     let spacing: CGFloat?
@@ -20,23 +18,23 @@ struct VerlicalLinesConfiguration: Equatable {
 struct VerlicalLines<
     ID,
     Data: RandomAccessCollection,
-    Style: LineStyle
+    ColorResolver: LineColorResolver
 >: View
-    where Data: RandomAccessCollection, ID: Hashable, ID == Style.ID
+    where Data: RandomAccessCollection, ID: Hashable, ID == ColorResolver.ID
 {
     private let data: Data
     private let keyPath: KeyPath<Data.Element, ID>
 
     private let configuration: VerlicalLinesConfiguration
 
-    private let style: Style
+    private let resolver: ColorResolver
 
     @Environment(\.self)
     private var environment: EnvironmentValues
 
     var body: some View {
         VerlicalLinesLayout(spacing: spacing, barMinWidth: lineMinWidth, alignment: alignment) {
-            let style = self.style.resolve(in: environment)
+            let style = self.resolver.resolve(in: environment)
 
             ForEach(data, id: keyPath) { item in
                 let id = item[keyPath: self.keyPath]
@@ -52,17 +50,17 @@ extension VerlicalLines {
     init(_ data: Data,
          id: KeyPath<Data.Element, ID>,
          configuration: VerlicalLinesConfiguration = .default,
-         style: Style)
+         style: ColorResolver)
     {
         self.data = data
         keyPath = id
         self.configuration = configuration
-        self.style = style
+        resolver = style
     }
 
     init(_ data: Data,
          configuration: VerlicalLinesConfiguration = .default,
-         style: Style)
+         style: ColorResolver)
         where Data.Element: Identifiable, Data.Element.ID == ID
     {
         self.init(data, id: \.id, configuration: configuration, style: style)
@@ -70,20 +68,20 @@ extension VerlicalLines {
 
     init(_ data: Data,
          configuration: VerlicalLinesConfiguration = .default,
-         style: Style)
+         style: ColorResolver)
         where Data.Element: Hashable, Data.Element == ID
     {
         self.init(data, id: \.self, configuration: configuration, style: style)
     }
 }
 
-extension VerlicalLines where Style == GradientStyle<ID> {
+extension VerlicalLines where ColorResolver == GradientColorResolver<ID> {
     init(_ data: Data,
          id: KeyPath<Data.Element, ID>,
          configuration: VerlicalLinesConfiguration = .default,
          gradient: Gradient)
     {
-        let style: Style = .init(gradient, count: data.count)
+        let style: ColorResolver = .init(gradient, count: data.count)
         self.init(data, id: id, configuration: configuration, style: style)
     }
 
@@ -92,7 +90,7 @@ extension VerlicalLines where Style == GradientStyle<ID> {
          gradient: Gradient)
         where Data.Element: Identifiable, Data.Element.ID == ID
     {
-        let style: Style = .init(gradient, count: data.count)
+        let style: ColorResolver = .init(gradient, count: data.count)
         self.init(data, configuration: configuration, style: style)
     }
 
@@ -101,24 +99,24 @@ extension VerlicalLines where Style == GradientStyle<ID> {
          gradient: Gradient)
         where Data.Element: Hashable, Data.Element == ID
     {
-        let style: Style = .init(gradient, count: data.count)
+        let style: ColorResolver = .init(gradient, count: data.count)
         self.init(data, configuration: configuration, style: style)
     }
 }
 
-extension VerlicalLines where Style == GradientStyle<ID> {
+extension VerlicalLines where ColorResolver == GradientColorResolver<ID> {
     init(_ data: Data, id: KeyPath<Data.Element, ID>, configuration: VerlicalLinesConfiguration = .default) {
-        let style = GradientStyle<ID>(count: data.count)
+        let style = GradientColorResolver<ID>(count: data.count)
         self.init(data, id: id, configuration: configuration, style: style)
     }
 
     init(_ data: Data, configuration: VerlicalLinesConfiguration = .default) where Data.Element: Identifiable, Data.Element.ID == ID {
-        let style = GradientStyle<ID>(count: data.count)
+        let style = GradientColorResolver<ID>(count: data.count)
         self.init(data, configuration: configuration, style: style)
     }
 
     init(_ data: Data, configuration: VerlicalLinesConfiguration = .default) where Data.Element: Hashable, Data.Element == ID {
-        let style = GradientStyle<ID>(count: data.count)
+        let style = GradientColorResolver<ID>(count: data.count)
         self.init(data, id: \.self, configuration: configuration, style: style)
     }
 }

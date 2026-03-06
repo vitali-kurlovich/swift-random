@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUIComponents
 
 struct GradientPreview: View {
     @Environment(\.isEnabled)

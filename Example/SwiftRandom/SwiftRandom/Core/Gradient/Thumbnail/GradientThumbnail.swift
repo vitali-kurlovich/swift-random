@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUIComponents
 
 extension GradientThumbnail {
     struct Configuration: Hashable {

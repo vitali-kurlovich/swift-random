@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftUIComponents
 
 extension GradientControl {
     enum Size {
