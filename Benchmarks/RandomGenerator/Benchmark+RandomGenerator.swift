@@ -1,7 +1,4 @@
 //
-//  Benchmark+RandomGenerator.swift
-//  swift-random
-//
 //  Created by Vitali Kurlovich on 6.03.26.
 //
 
@@ -10,24 +7,24 @@ import Random
 
 extension Benchmark {
     func runRandomGeneratorBenchmark() {
-        let benchmark = BenchmarkExecuter(repeatCount: self.repeat)
+        let benchmark = BenchmarkExecuter(name: "RandomNumberGenerator", repeatCount: self.repeat)
 
         let count = 10_000_000
         let sha512Benshmark = RandomGeneratorBenchmark(count: count, SHA512RandomGenegator(seed: 0))
 
-        benchmark(name: sha512Benshmark.name) {
+        benchmark(name: sha512Benshmark.description) {
             sha512Benshmark.run()
         }
 
         let mt19937Benshmark = RandomGeneratorBenchmark(count: count, MT19937RandomGenegator())
 
-        benchmark(name: mt19937Benshmark.name) {
+        benchmark(name: mt19937Benshmark.description) {
             mt19937Benshmark.run()
         }
 
         if #available(macOS 26.0, *) {
             let inlineMT19937Benshmark = RandomGeneratorBenchmark(count: count, InlineMT19937RandomGenegator())
-            benchmark(name: inlineMT19937Benshmark.name) {
+            benchmark(name: inlineMT19937Benshmark.description) {
                 mt19937Benshmark.run()
             }
         }

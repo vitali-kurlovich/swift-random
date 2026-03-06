@@ -4,12 +4,12 @@
 
 import Benchmarks
 
-struct RandomGeneratorBenchmark<R: RandomNumberGenerator> {
+struct RandomGeneratorBenchmark<R: RandomNumberGenerator>: CustomStringConvertible {
     let count: Int
 
     let generator: R
 
-    var name: String {
+    var description: String {
         String(describing: R.self)
     }
 
