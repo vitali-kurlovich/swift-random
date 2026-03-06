@@ -86,7 +86,7 @@ private extension Benchmark {
         }
 
         benchmark(name: "Array SHA512 (10)") {
-            var generator = SHA512RandomGenegator(repeatCount: self.repeat)
+            var generator = SHA512RandomGenegator()
 
             var array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
