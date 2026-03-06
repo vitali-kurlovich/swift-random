@@ -14,17 +14,28 @@ public enum ShuffleAlgorithm {
 }
 
 public struct FaroShuffleConfiguration: Hashable, Sendable {
-    public var count: Int
+    public var rounds: Int
 
     public var middleShiftRange: ClosedRange<Int>
     public var stuckCardsRange: ClosedRange<Int>
 
-    public init(count: Int = 1, middleShiftRange: ClosedRange<Int> = 0 ... 0, stuckCardsRange: ClosedRange<Int> = 1 ... 1) {
+    public init(count: Int = 8, middleShiftRange: ClosedRange<Int> = 0 ... 0, stuckCardsRange: ClosedRange<Int> = 1 ... 1) {
         assert(count > 0)
         assert(stuckCardsRange.lowerBound > 0)
 
-        self.count = count
+        rounds = count
         self.middleShiftRange = middleShiftRange
         self.stuckCardsRange = stuckCardsRange
+    }
+}
+
+extension ShuffleAlgorithm: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .default:
+            return "default"
+        case let .faro(configuration):
+            return "faro(\(configuration.rounds))"
+        }
     }
 }

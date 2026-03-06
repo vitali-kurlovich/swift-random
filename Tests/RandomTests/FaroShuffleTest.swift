@@ -56,7 +56,7 @@ struct FaroShuffle {
         generator = MT19937RandomGenegator(seed: 42)
         array = [1, 2, 3, 4, 5, 6, 7]
 
-        configuration.count = 6
+        configuration.rounds = 6
 
         array.shuffle(algorithm: .faro(configuration), using: &generator)
 

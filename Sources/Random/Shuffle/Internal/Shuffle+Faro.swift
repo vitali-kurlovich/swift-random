@@ -12,7 +12,7 @@ extension Array {
 
         var boolGenerator = BitRandomGenerator(generator)
 
-        for _ in 0 ..< configuration.count {
+        for _ in 0 ..< configuration.rounds {
             var isInShuffle = boolGenerator.next()
 
             var midIndex = (startIndex + endIndex) / 2
@@ -97,7 +97,7 @@ extension InlineArray {
 
         var boolGenerator = BitRandomGenerator(generator)
 
-        for _ in 0 ..< configuration.count {
+        for _ in 0 ..< configuration.rounds {
             let copy = self
 
             var isInShuffle = boolGenerator.next()
