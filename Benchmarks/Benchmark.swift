@@ -25,51 +25,6 @@ struct Benchmark: ParsableCommand {
 }
 
 private extension Benchmark {
-    func runRandomGeneratorBenchmark() {
-        let benchmark = BenchmarkExecuter(repeatCount: self.repeat)
-
-        benchmark(name: String(describing: SHA512RandomGenegator.self)) {
-            var generator = SHA512RandomGenegator(seed: 0)
-            for _ in 0 ..< 10_000_000 {
-                _ = UInt64.random(in: UInt64.min ... UInt64.max, using: &generator)
-            }
-
-            blackHole(UInt64.random(in: UInt64.min ... UInt64.max, using: &generator))
-        }
-
-        benchmark(name: String(describing: MT19937RandomGenegator.self)) {
-            var generator = MT19937RandomGenegator()
-            for _ in 0 ..< 10_000_000 {
-                _ = UInt64.random(in: UInt64.min ... UInt64.max, using: &generator)
-            }
-
-            blackHole(UInt64.random(in: UInt64.min ... UInt64.max, using: &generator))
-        }
-
-        if #available(macOS 26.0, *) {
-            benchmark(name: String(describing: InlineMT19937RandomGenegator.self)) {
-                var generator = InlineMT19937RandomGenegator()
-                for _ in 0 ..< 10_000_000 {
-                    _ = UInt64.random(in: UInt64.min ... UInt64.max, using: &generator)
-                }
-
-                blackHole(UInt64.random(in: UInt64.min ... UInt64.max, using: &generator))
-            }
-        }
-
-        benchmark(name: "SwiftRandomGenegator") {
-            for _ in 0 ..< 10_000_000 {
-                _ = UInt64.random(in: UInt64.min ... UInt64.max)
-            }
-
-            blackHole(UInt64.random(in: UInt64.min ... UInt64.max))
-        }
-
-        benchmark.start()
-    }
-}
-
-private extension Benchmark {
     func runShuffleBenchmark() {
         let benchmark = BenchmarkExecuter(repeatCount: self.repeat)
 
