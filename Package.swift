@@ -47,7 +47,7 @@ let package = Package(
             dependencies: [
                 "Random",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
-                .package(url: "https://github.com/vitali-kurlovich/swift-benchmarks", from: "0.3.0"),
+                .product(name: "Benchmarks", package: "swift-benchmarks"),
             ],
             path: "Benchmarks"
 
